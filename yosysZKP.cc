@@ -89,15 +89,17 @@ struct ScrambledCircuit {
 
   dict<IdString, TruthTable> gates;
   
-  dict<Wire*, char> execution;
-  dict<Wire*, char> keys;
+  dict<Wire*, unsigned char> execution;
+  dict<Wire*, unsigned char> keys;
   
   ConstEval ce;
 
   SigSpec allinputs;
   SigSpec allwires;
   ScrambledCircuit(Module* module): rand(true), m(module), sigmap(m), ce(m) {
+    m->sort();
     enumerateWires();
+    
     initializeCellTables();
   }
   void enumerateWires() {
@@ -121,6 +123,31 @@ struct ScrambledCircuit {
     keys.clear();
     for(auto& it:execution) {
       keys[it.first]=rand.GenerateBit();
+    }
+    
+    gates.clear();
+    for(Cell* cell:m->cells()) {
+      std::vector<unsigned char> inputkey;
+      std::vector<unsigned char> outputkey;
+      for(auto& it:cell->connections()) {
+	bool input=cell->input(it.first);
+	bool output=cell->output(it.first);
+	log_assert(input || output);
+	SigSpec con=sigmap(it.second);
+	for(const SigBit& b:con) {
+	  char bit=0;
+	  if(b.wire!=nullptr){
+	    bit=keys[b.wire];
+	  }
+	  if(input) {
+	    inputkey.push_back(bit);
+	  } else {
+	    outputkey.push_back(bit);
+	  }
+	}
+	gates[cell->name]=cells[cell->type];
+	gates[cell->name].scramble(rand, inputkey, outputkey);
+      }
     }
   }
   void execute(Const inputs) {
@@ -147,7 +174,6 @@ struct ScrambledCircuit {
 	SigSpec cellin;
 	SigSpec cellout;
 	for(auto& conn: c->connections()) {
-	  c->
 	  if(c->input(conn.first)) {
 	    cellin.append(conn.second);
 	  }
@@ -189,7 +215,8 @@ int main()
     Yosys::yosys_banner();
     Design* design=yosys_get_design();
     Yosys::run_frontend(filename, "auto", design);
- 
+    Pass::call(design, "splitnets -ports");
+    
     Module* module=design->module(modulename);
     ScrambledCircuit circuit(module);
     
