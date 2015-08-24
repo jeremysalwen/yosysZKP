@@ -1,0 +1,52 @@
+package yosysZKP;
+
+message WireValues {
+  message Entry {
+    required string wirename = 1;
+    required bool value = 2; 
+  }
+  repeated Entry entries = 1;
+  
+  required bytes nonce = 2;
+}
+
+message TruthTableEntry {
+  repeated bool inputs = 1;
+  repeated bool outputs = 2;
+  required bytes nonce = 3;
+}
+
+message TruthTable {
+  repeated TruthTableEntry entries = 1;
+}
+
+message FullState {
+  required WireValues exec = 1;
+  required WireValues keys = 2;
+  
+  repeated TruthTable gates = 3;
+}
+
+message Hash {
+ required bytes hash=1;
+}
+
+message TableCommitment {
+  repeated Hash entryhashes =1;
+}
+
+message Commitment {
+  required Hash executionhash = 1;
+  required Hash keyhash = 2;
+  repeated TableCommitment gatehashes = 3;
+}
+
+message ExecutionReveal {
+  required WireValues exec = 1;
+  repeated TruthTableEntry entries = 2;
+}
+
+message ScramblingReveal {
+  required WireValues keys = 1;
+  repeated TruthTable gates = 2;
+}
