@@ -5,23 +5,22 @@
 #include <kernel/consteval.h>
 
 #include <crypto++/osrng.h>
-
+#include <crypto++/modes.h>
 #include "messages.pb.h"
 
 #define NONCE_SIZE 16
 
 yosysZKP::Commitment commit(const yosysZKP::FullState& hiddenState);
 
-bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ExecutionReveal& reveal);
-bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ScramblingReveal& reveal);
-
-yosysZKP::Hash TruthTableEntry_get_commitment(const yosysZKP::TruthTableEntry& e);
-bool TruthTableEntry_verify_computation(const yosysZKP::TruthTableEntry& e, const std::vector<byte>& i, const std::vector<byte>&o);
-void TruthTableEntry_scramble(const CryptoPP::RandomNumberGenerator& rng, yosysZKP::TruthTableEntry& e, const std::vector<byte>& i, const std::vector<byte>& o);
+std::string TruthTableEntry_get_commitment(const yosysZKP::TruthTableEntry& e);
+bool TruthTableEntry_verify_computation(const yosysZKP::TruthTableEntry& e, const std::vector<bool>& i, const std::vector<bool>&o);
+void TruthTableEntry_scramble(const CryptoPP::RandomNumberGenerator& rng, yosysZKP::TruthTableEntry& e, const std::vector<bool>& i, const std::vector<bool>& o);
 
 yosysZKP::TruthTable TruthTable_from_gate(Yosys::Cell* cell);
 yosysZKP::TableCommitment TruthTable_get_commitment(const yosysZKP::TruthTable& t);
-void TruthTable_scramble(yosysZKP::TruthTable& t, CryptoPP::RandomNumberGenerator& rand, const std::vector<byte>& i, const std::vector<byte>& o);
+void TruthTable_scramble(yosysZKP::TruthTable& t, CryptoPP::RandomNumberGenerator& rand, const std::vector<bool>& i, const std::vector<bool>& o);
+bool TruthTable_contains_entry(const yosysZKP::TruthTable& tt, const yosysZKP::TruthTableEntry& entry, const std::vector<bool>& inputkey, const std::vector<bool>& outputkey);
+
 
 
 struct WireValues {
@@ -29,8 +28,6 @@ struct WireValues {
   
   Yosys::dict<Yosys::Wire*, unsigned char> map;
 
-  byte nonce[NONCE_SIZE];
-  
   WireValues(Yosys::Module* module);
   
   yosysZKP::WireValues serialize()  const;
@@ -39,7 +36,7 @@ struct WireValues {
 };
 
 struct ScrambledCircuit {
-  CryptoPP::AutoSeededRandomPool rand;
+  CryptoPP::OFB_Mode<CryptoPP::AES>::Encryption rand;
   
   Yosys::Module* m;
 
@@ -58,6 +55,9 @@ struct ScrambledCircuit {
   Yosys::SigSpec alloutputs;
 
   Yosys::SigSpec allwires;
+
+  void getGatePorts(WireValues& values, const Yosys::Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs);
+  
   ScrambledCircuit(Yosys::Module* module);
   
   void enumerateWires();
@@ -68,12 +68,14 @@ struct ScrambledCircuit {
   
   void createProofRound();
 
-  void serializeState();
 
   yosysZKP::ExecutionReveal reveal_execution();
   yosysZKP::ScramblingReveal reveal_scrambling();
 
+  bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ExecutionReveal& reveal);
+  bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ScramblingReveal& reveal);
+
+
 };
 
 #endif //YOSYS_ZKP_H
-

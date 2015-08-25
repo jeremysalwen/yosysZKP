@@ -21,17 +21,7 @@ void TruthTable_check(const yosysZKP::TruthTable& t) {
   }
 }
 yosysZKP::Commitment commit(const yosysZKP::FullState& hiddenState) {
-  SHA256 sha;
-  byte hash[SHA256::DIGESTSIZE];
   yosysZKP::Commitment comm;
-
-  std::string serializedexecution=hiddenState.exec().SerializeAsString();
-  sha.CalculateDigest(hash, (const byte*) serializedexecution.data(), serializedexecution.size());
-  comm.mutable_executionhash()->set_hash(hash, SHA256::DIGESTSIZE);
-
-  std::string serializedkeys=hiddenState.keys().SerializeAsString();
-  sha.CalculateDigest(hash, (const byte*) serializedkeys.data(), serializedkeys.size());
-  comm.mutable_keyhash()->set_hash(hash,SHA256::DIGESTSIZE);
 
   for(int i=0; i<hiddenState.gates_size(); i++) {
     const yosysZKP::TruthTable& gate=hiddenState.gates(i);
@@ -41,24 +31,16 @@ yosysZKP::Commitment commit(const yosysZKP::FullState& hiddenState) {
 }
 
 
-bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ExecutionReveal& reveal) {
-  std::string hash(SHA256::DIGESTSIZE, '\0');
-  SHA256 sha;
+bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ExecutionReveal& reveal) {
 
-  std::string execserialized=reveal.exec().SerializeAsString();
-  sha.CalculateDigest((byte*)hash.data(), (byte*)execserialized.data(),execserialized.size());
-  if(hash != commitment.executionhash().hash()) {
-    log_error("Hash check failed for execution\n");
-    return false;
-  }
-
+  //Validate that we are revealing a precommitted entry
   for(int i=0; i<commitment.gatehashes_size(); i++) {
     const yosysZKP::TableCommitment& com=commitment.gatehashes(i);
-    yosysZKP::Hash tablehash=TruthTableEntry_get_commitment(reveal.entries(i));
+    std::string entryhash=TruthTableEntry_get_commitment(reveal.entries(i));
     
     bool found=false;
     for(int j=0; j<com.entryhashes_size(); j++) {
-      if(com.entryhashes(j).hash() == tablehash.hash()) {
+      if(com.entryhashes(j) == entryhash) {
 	found=true;
       }
     }
@@ -67,35 +49,96 @@ bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZ
       return false;
     }
   }
+  
+  //Validate that the execution trace matches the revealed gates
+  WireValues scrambledexec(m);
+  scrambledexec.deserialize(reveal.exec());
+  int i=0;
+  for(Cell* cell: m->cells()) {
+    const yosysZKP::TruthTableEntry& entry=reveal.entries(i);
+    std::vector<bool> inputs, outputs;
+    getGatePorts(scrambledexec, cell, inputs, outputs);
 
-  //TODO Validate that wires match revealed truth table entries
+    if(inputs.size()!=entry.inputs_size() || outputs.size()!=entry.outputs_size()) {
+      log_error("Size mismatch in truth table entry\n");
+    }
+    
+    if(!TruthTableEntry_verify_computation(entry, inputs, outputs)) {
+      log("FAIL\n entry %s\n",entry.DebugString().c_str());
+      std::vector<bool> execin,execout,keyin,keyout;
+      getGatePorts(execution, cell, execin, execout);
+      getGatePorts(keys, cell, keyin, keyout);
+      
+      log("Canonicalentry %s\n",gatesdef[cell->name].DebugString().c_str());
+      log("\ninputs ");
+      for(bool b:inputs)
+	log("%d ",b);
+      log("\noutputs ");
+      for(bool b:outputs)
+	log("%d ",b);
+
+      log("\neinputs ");
+      for(bool b:execin)
+	log("%d ",b);
+      log("\neoutputs ");
+      for(bool b:execout)
+	log("%d ",b);
+
+      log("\nkinputs ");
+      for(bool b:keyin)
+	log("%d ",b);
+      log("\nkoutputs ");
+      for(bool b:keyout)
+	log("%d ",b);
+   
+      log_error("\nFailed to find corresponding truth table entry for cell %s\n",log_id(cell->name));
+      
+      return false;
+    }
+    i++;
+  }
 
   return true;
 }
-bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ScramblingReveal& reveal) {
-   std::string hash(SHA256::DIGESTSIZE, '\0');
-  SHA256 sha;
-
-  std::string execserialized=reveal.keys().SerializeAsString();
-  sha.CalculateDigest((byte*)hash.data(), (byte*)execserialized.data(),execserialized.size());
-  if(hash != commitment.keyhash().hash()) {
-    log_error("Hash check failed for keys\n");
-    return false;
-  }
-
+bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ScramblingReveal& reveal) {
+  log("done1\n");
   for(int i=0; i<commitment.gatehashes_size(); i++) {
     const yosysZKP::TableCommitment& com=commitment.gatehashes(i);
     const yosysZKP::TableCommitment& hash=TruthTable_get_commitment(reveal.gates(i));
     for(int j=0; j<com.entryhashes_size(); j++) {
-      if(com.entryhashes(j).hash()!=hash.entryhashes(j).hash()) {
+      if(com.entryhashes(j) !=hash.entryhashes(j)) {
 	log_error("Hash check failed for truth table\n");
 	return false;
       }
     }
   }
-  
-  //TODO Validate that gates match actual circuit
-  
+  log("done2\n");
+
+  keys.deserialize(reveal.keys());
+ 
+  int i=0;
+  for(Cell* cell: m->cells()) {
+    log("donea\n");
+    const yosysZKP::TruthTable& table=reveal.gates(i);
+    log("done3\n");
+    const yosysZKP::TruthTable& canonical=gatesdef[cell->name];
+    
+    std::vector<bool> inputkeys, outputkeys;
+    getGatePorts(keys, cell, inputkeys, outputkeys);
+    log("done4\n");
+    for(const yosysZKP::TruthTableEntry& entry: table.entries()) {
+      log("in1\n");
+      if(!TruthTable_contains_entry(canonical, entry, inputkeys, outputkeys)) {
+	
+	log("def\n%s\n scrambled\n%s\n",gatesdef[cell->name].DebugString().c_str(), gates[cell->name].DebugString().c_str());
+log_error("Failed to find corresponding truth table entry for cell %s\n",log_id(cell->name));
+	return false;
+      }
+      log("in2\n");
+    }
+    i++;
+  }
+  log("done5\n");
   return true;
 }
 
@@ -199,17 +242,15 @@ yosysZKP::TruthTable TruthTable_from_gate(Cell* cell) {
 
 
 
-yosysZKP::Hash TruthTableEntry_get_commitment(const yosysZKP::TruthTableEntry& e) {
-  yosysZKP::Hash h;
-  std::string* buf=h.mutable_hash();
-  buf->resize(SHA256::DIGESTSIZE);
-  
+std::string TruthTableEntry_get_commitment(const yosysZKP::TruthTableEntry& e) {
+  std::string buf(SHA256::DIGESTSIZE,0);
+    
   std::string serialized=e.SerializeAsString();
-  SHA256().CalculateDigest((byte*)buf->data(),(byte*)serialized.data(),serialized.length());
-  return h;
+  SHA256().CalculateDigest((byte*)buf.data(),(byte*)serialized.data(),serialized.length());
+  return buf;
 }
 
-bool TruthTableEntry_verify_computation(const yosysZKP::TruthTableEntry& e, const vector<unsigned char>& i, const vector<unsigned char>& o) {
+bool TruthTableEntry_verify_computation(const yosysZKP::TruthTableEntry& e, const vector<bool>& i, const vector<bool>& o) {
   if(i.size()!=e.inputs_size() || o.size() != e.outputs_size()) {
     log_error("Tried to verify computation with wrong sized vector\n");
   }
@@ -224,7 +265,7 @@ bool TruthTableEntry_verify_computation(const yosysZKP::TruthTableEntry& e, cons
   return true;
 }
 
-void TruthTableEntry_scramble(RandomNumberGenerator& rand, yosysZKP::TruthTableEntry& e, const std::vector<unsigned char>&i, const std::vector<unsigned char>& o) {
+void TruthTableEntry_scramble(RandomNumberGenerator& rand, yosysZKP::TruthTableEntry& e, const std::vector<bool>&i, const std::vector<bool>& o) {
   for(unsigned int n=0; n<i.size(); n++){
     e.set_inputs(n, e.inputs(n)^i[n]);
   }
@@ -246,12 +287,85 @@ yosysZKP::TableCommitment TruthTable_get_commitment(const yosysZKP::TruthTable& 
   return tc;
 }
   
-void TruthTable_scramble(yosysZKP::TruthTable& t, RandomNumberGenerator& rand, const std::vector<unsigned char>& i, const std::vector<unsigned char>& o) {
+void TruthTable_scramble(yosysZKP::TruthTable& t, RandomNumberGenerator& rand, const std::vector<bool>& i, const std::vector<bool>& o) {
   
   for(int n=0; n<t.entries_size(); n++) {
     TruthTableEntry_scramble(rand, *t.mutable_entries(n), i, o);
   }
   rand.Shuffle(t.mutable_entries()->begin(), t.mutable_entries()->end());
+}
+
+bool TruthTable_contains_entry(const yosysZKP::TruthTable& tt, const yosysZKP::TruthTableEntry& entry, const std::vector<bool>& inputkey, const std::vector<bool>& outputkey) {
+
+  std::vector<bool> unscrambledinp, unscrambledoutp;
+
+  log("a1\n");
+  for(int i=0; i<entry.inputs_size(); i++)
+    unscrambledinp.push_back(entry.inputs(i)^inputkey[i]);
+  log("a2\n");
+  for(int i=0; i<entry.outputs_size(); i++)
+    unscrambledoutp.push_back(entry.outputs(i)^outputkey[i]);
+    log("a3\n");
+  int min=0, max=tt.entries_size()-1;
+
+  while(max>min) {
+    int ave=min+(max-min)/2;
+    log("ave %d %d %d\n",min,max,ave);
+    const yosysZKP::TruthTableEntry& compentry=tt.entries(ave);
+
+    bool equal=true;
+    for(int i=compentry.inputs_size()-1; i>=0; i--) {
+      if(compentry.inputs(i) && !unscrambledinp[i]) {
+	log("smaller!\n");
+	log("%s\n",compentry.DebugString().c_str());
+	equal=false;
+	max=ave-1;
+	break;
+      }
+      if(!compentry.inputs(i) && unscrambledinp[i]) {
+	log("bigger!\n");
+	log("%s\n",compentry.DebugString().c_str());
+	equal=false;
+	min=ave+1;
+	break;
+      }
+    }
+    if(equal) {
+      min=ave;
+      max=ave;
+    }
+  }
+  if(max!=min) {
+    log("found no entry\n");
+    for(bool b:unscrambledinp)
+      log("%d ",b);
+    log("\n");
+    for(bool b:unscrambledoutp)
+      log("%d ",b);
+    log("\n");
+    log("table\n");
+    for(int i=0; i<tt.entries_size(); i++) {
+      log("%s\n",tt.entries(i).DebugString().c_str());
+    }
+    return false;
+  }
+  const yosysZKP::TruthTableEntry& comp=tt.entries(min);
+  log("a4\n");
+  bool verified=TruthTableEntry_verify_computation(comp, unscrambledinp, unscrambledoutp);
+  if(!verified) {
+    log("not verified\n");
+    for(bool b:unscrambledinp)
+      log("%d ",b);
+    log("\n");
+    for(bool b:unscrambledoutp)
+      log("%d ",b);
+    log("\n");
+    log("table\n");
+    for(int i=0; i<tt.entries_size(); i++) {
+      log("%s\n",tt.entries(i).DebugString().c_str());
+    }
+  }
+  return verified;
 }
 
 
@@ -266,7 +380,7 @@ yosysZKP::WireValues WireValues::serialize()  const {
     entry->set_wirename(wirename.str());
     entry->set_value(it.second);
   }
-  ex.set_nonce(nonce, NONCE_SIZE);
+
   return ex;
 }
 void WireValues::deserialize(const yosysZKP::WireValues& ex) {
@@ -274,10 +388,34 @@ void WireValues::deserialize(const yosysZKP::WireValues& ex) {
   for(const yosysZKP::WireValues_Entry& entry : ex.entries()) {
     map[m->wire(IdString(entry.wirename()))]=entry.value();
   }
-  memmove(nonce, ex.nonce().data(), NONCE_SIZE);
+}
+void ScrambledCircuit::getGatePorts(WireValues& values, const Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs) {
+  inputs.clear();
+  outputs.clear();
+  for(auto& it:cell->connections()) {
+    bool input=cell->input(it.first);
+    bool output=cell->output(it.first);
+    log_assert(input || output);
+    SigSpec con=sigmap(it.second);
+    for(const SigBit& b:con) {
+      char bit=0;
+      if(b.wire!=nullptr){
+	bit=values.map[b.wire];
+      }
+      if(input) {
+	inputs.push_back(bit);
+      } else {
+	outputs.push_back(bit);
+      }
+    }
+  }
 }
 
-ScrambledCircuit::ScrambledCircuit(Module* module): rand(true), m(module), sigmap(m),execution(m), keys(m) {
+ScrambledCircuit::ScrambledCircuit(Module* module): rand(), m(module), sigmap(m),execution(m), keys(m) {
+  SecByteBlock seed(32 + 16);
+  seed.CleanNew(32+16);
+  rand.SetKeyWithIV(seed, 32, seed + 32, 16);
+
   printf("pre\n");
   enumerateWires();
   printf("enumerated\n");
@@ -316,54 +454,22 @@ void ScrambledCircuit::createProofRound() {
   printf("step1\n");
   serializedState.clear_gates(); 
   for(Cell* cell:m->cells()) {
-    std::vector<unsigned char> inputkey;
-    std::vector<unsigned char> outputkey;
-    for(auto& it:cell->connections()) {
-      bool input=cell->input(it.first);
-      bool output=cell->output(it.first);
-      log_assert(input || output);
-      SigSpec con=sigmap(it.second);
-      for(const SigBit& b:con) {
-	char bit=0;
-	if(b.wire!=nullptr){
-	  bit=keys.map[b.wire];
-	}
-	if(input) {
-	  inputkey.push_back(bit);
-	} else {
-	  outputkey.push_back(bit);
-	}
-      }
-      gates[cell->name]=gatesdef[cell->name];
-      log("ok1\n");
-      TruthTable_check(gatesdef[cell->name]);
-      log("ok2\n");
-      TruthTable_scramble(gates[cell->name], rand, inputkey, outputkey);
-      TruthTable_check(gates[cell->name]);
-    }
-  }
-  printf("step2\n");
-  serializeState();
-  printf("step3\n");
-}
-
-void ScrambledCircuit::serializeState() {
-  *serializedState.mutable_keys()=keys.serialize();
-  
-  serializedState.clear_exec();
-  for(const auto& it:execution.map) {
-    bool bit=keys.map[it.first]^ it.second;
-    yosysZKP::WireValues_Entry* e=serializedState.mutable_exec()->add_entries();
-    e->set_wirename(it.first->name.str());
-    e->set_value(bit);
-  }
-  
-  *serializedState.mutable_exec()=execution.serialize();
-
-  for(Cell * cell:m->cells()) {
+    std::vector<bool> inputkey;
+    std::vector<bool> outputkey;
+    getGatePorts(keys, cell, inputkey, outputkey);
+    
+    gates[cell->name]=gatesdef[cell->name];
+    log("ok1\n");
+    TruthTable_check(gatesdef[cell->name]);
+    log("ok2\n");
+    TruthTable_scramble(gates[cell->name], rand, inputkey, outputkey);
+    TruthTable_check(gates[cell->name]);
     *serializedState.add_gates()=gates[cell->name];
   }
+  printf("step2\n");
+  
 }
+
   
 void ScrambledCircuit::execute(Const inputs) {
   ConstEval ce(m);
@@ -394,64 +500,74 @@ void ScrambledCircuit::initializeCellTables() {
 
 yosysZKP::ExecutionReveal ScrambledCircuit::reveal_execution() {
   yosysZKP::ExecutionReveal exec;
-  *exec.mutable_exec()=serializedState.exec();
+  yosysZKP::WireValues* wv=exec.mutable_exec();
+  for(const auto& it:execution.map) {
+    bool bit=it.second ^keys.map[it.first];
+    yosysZKP::WireValues_Entry* entry=wv->add_entries();
+    entry->set_wirename(it.first->name.str());
+    entry->set_value(bit);
+  }
 
   for(Cell* cell: m->cells()) {
+     if(cell->name.str().find("$and$test_synth.v:1537$2")!=std::string::npos) {
+       log("DID FIND\n");
+     }
     const yosysZKP::TruthTable& g=gates[cell->name];
 
-    std::vector<unsigned char> inputs;
-    std::vector<unsigned char> outputs; 
+    std::vector<bool> inputval,  inputkey;
+    std::vector<bool> outputval, outputkey; 
 
-    for(const auto& it: cell->connections()) {
-      bool inp=cell->input(it.first);
-      bool outp=cell->output(it.first);
-      log_assert(inp ^ outp);
-      SigSpec conns=sigmap(it.second);
-      for(const SigBit& b:conns) {
-	unsigned char bit;
-	if(b.wire!=nullptr) {
-	  log("bit %d key %d ",execution.map[b.wire], keys.map[b.wire]);
-	  bit=execution.map[b.wire] ^ keys.map[b.wire];
-	} else {
-	  bit= (b.data==State::S1);
-	}
-	if(inp) {
-	  log(" inp wire is %s\n",log_id(b.wire->name));
-	  inputs.push_back(bit);
-	}
-	if(outp) {
-	  log(" outp wire is %s\n",log_id(b.wire->name));
-	  outputs.push_back(bit);
-	}
-      }
-    }
+    getGatePorts(execution, cell, inputval, outputval);
+    getGatePorts(keys, cell, inputkey, outputkey);
+
     int count=0;
     printf("Entries size %d\n",g.entries_size());
     for(const yosysZKP::TruthTableEntry& e: g.entries()) {
       printf("checking input \n%s\n",e.DebugString().c_str());
       
-      for(size_t i=0; i<inputs.size(); i++)
-	if(e.inputs(i) !=inputs[i]) 
+      for(size_t i=0; i<inputval.size(); i++)
+	if(e.inputs(i) !=(inputval[i]^inputkey[i])) 
 	  goto loop_continue;
-      printf("matches outp %d\n",outputs[0]);
-      for(size_t i=0; i<outputs.size(); i++)
-	if(e.outputs(i) != outputs[i])
+
+      for(size_t i=0; i<outputval.size(); i++)
+	if(e.outputs(i) != (outputval[i]^outputkey[i]))
 	  log_error("Error, truth table does not match computed execution for cell %s %s\n",log_id(cell->type), log_id(cell->name));
-	
+
+      if(cell->name.str().find("$and$test_synth.v:1537$2")!=std::string::npos) {
+	log("ENTRY IS\n %s\n",e.DebugString().c_str());
+	log("inputval ");
+	for(bool b:inputval)
+	  log("%d ",b);
+	log("\n");
+	log("outputval ");
+	for(bool b:outputval)
+	  log("%d ",b);
+	log("\n");
+
+	log("inputkey ");
+	for(bool b:inputkey)
+	  log("%d ",b);
+	log("\n");
+	log("outputkey ");
+	for(bool b:outputkey)
+	  log("%d ",b);
+	log("\n");
+
+      }
       *exec.add_entries()=e;
       count++;
+    loop_continue: ;
     }
     if(count!=1) {
       log_error("Truth table contains multiple entries for the same inputs\n");
     }
-  loop_continue: ;
   }
   return exec;
 }
 
 yosysZKP::ScramblingReveal ScrambledCircuit::reveal_scrambling() {
   yosysZKP::ScramblingReveal scr;
-  *scr.mutable_keys()=serializedState.keys();
+  *scr.mutable_keys()=keys.serialize();
   *scr.mutable_gates()=serializedState.gates();
   return scr;
 }
@@ -479,9 +595,16 @@ int main(int argc, char** argv)
   circuit.createProofRound();
   yosysZKP::Commitment comm=commit(circuit.serializedState);
   yosysZKP::ExecutionReveal exec=circuit.reveal_execution();
-  
 
-  printf("Execution Reveal %s \n",exec.DebugString().c_str());
+  yosysZKP::ScramblingReveal scramb=circuit.reveal_scrambling();
+
+  ScrambledCircuit reciever(module);
+  bool execval=reciever.validate_precommitment(comm, exec);
+  log("execution validated? %d\n", execval);
+
+  bool scrambval=reciever.validate_precommitment(comm, scramb);
+  log("scramblind validated? %d\n",scrambval);
+
   Yosys::yosys_shutdown();
   return 0;
 }
