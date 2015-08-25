@@ -1,28 +1,15 @@
-#ifndef YOSYS_ZKP_H
-#define YOSYS_ZKP_H
+#ifndef SCRAMBLED_CIRCUIT_H
+#define SCRAMBLED_CIRCUIT_H
 #include <kernel/yosys.h>
 #include <kernel/sigtools.h>
-#include <kernel/consteval.h>
 
 #include <crypto++/osrng.h>
 #include <crypto++/modes.h>
+
 #include "messages.pb.h"
 
-#define NONCE_SIZE 16
+#include "WireValues.h"
 
-yosysZKP::Commitment commit(const yosysZKP::FullState& hiddenState);
-
-struct WireValues {
-  Yosys::Module* m;
-  
-  Yosys::dict<Yosys::Wire*, unsigned char> map;
-
-  WireValues(Yosys::Module* module);
-  
-  yosysZKP::WireValues serialize()  const;
-  void deserialize(const yosysZKP::WireValues& ex);
-
-};
 
 struct ScrambledCircuit {
   CryptoPP::OFB_Mode<CryptoPP::AES>::Encryption rand;
@@ -55,7 +42,7 @@ struct ScrambledCircuit {
 
   void execute(Yosys::Const inputs);
   
-  void createProofRound();
+  yosysZKP::Commitment createProofRound();
 
 
   yosysZKP::ExecutionReveal reveal_execution();
@@ -67,4 +54,4 @@ struct ScrambledCircuit {
 
 };
 
-#endif //YOSYS_ZKP_H
+#endif //SCRAMBLED_CIRUIT_H

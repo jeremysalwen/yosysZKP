@@ -1,0 +1,257 @@
+#include "TruthTable.h"
+
+#include <crypto++/sha.h>
+#include <kernel/consteval.h>
+
+USING_YOSYS_NAMESPACE
+using namespace CryptoPP;
+
+void TruthTable_check(const yosysZKP::TruthTable& t) {
+  for(int i=0; i<t.entries_size(); i++) {
+    for(int j=0; j<t.entries_size(); j++) {
+      if(j==i)
+	continue;
+      bool matches=true;
+      for(int k=0; k<t.entries(i).inputs_size(); k++)
+	if(t.entries(i).inputs(k)!=t.entries(j).inputs(k))
+	  matches=false;
+      if(matches)
+	log_error("DUPLICATE ENTRY\n");
+    }
+  }
+}
+
+yosysZKP::TruthTable TruthTable_from_gate(Cell* cell) {
+  yosysZKP::TruthTable result;
+
+  Module mod;
+  SigSpec inputs, outputs;
+
+  Cell *c = mod.addCell("\\uut", cell);
+  auto conns = cell->connections();
+  conns.sort<RTLIL::sort_by_id_str>();
+  for (auto &conn : conns) {
+    Wire *w = mod.addWire(conn.first, GetSize(conn.second));
+    if (cell->input(conn.first))
+      inputs.append(w);
+    if (cell->output(conn.first))
+      outputs.append(w);
+    c->setPort(conn.first, w);
+  }
+  mod.check();
+
+
+  if(inputs.size()>16) {
+    log_error("Gate %s has too many inputs, and so too big a truth table. Please decompose it into smaller gates\n",log_id(cell->name));
+  }
+    
+  // print truth table header
+  vector<RTLIL::SigChunk> in_chunks_r = inputs.chunks();
+  vector<RTLIL::SigChunk> out_chunks_r = outputs.chunks();
+
+  for (auto &c : in_chunks_r)
+    log(" %*s", c.width, log_id(c.wire));
+  log(" |");
+  for (auto &c : out_chunks_r)
+    log(" %*s", c.width, log_id(c.wire));
+  log("\n");
+
+  for (auto &c : in_chunks_r)
+    log(" %.*s", c.width, "----------------------------");
+  log(" |");
+  for (auto &c : out_chunks_r)
+    log(" %.*s", c.width, "----------------------------");
+  log("\n");
+    
+  // create truth table
+
+  ConstEval ce(&mod);
+  Const invalue(0, GetSize(inputs));
+
+  do {
+    ce.push();
+    ce.set(inputs, invalue);
+	
+    yosysZKP::TruthTableEntry* entry=result.add_entries();
+
+    for(State st:invalue.bits) {
+      entry->add_inputs(st==State::S1);
+    }
+	
+    for (auto &c : in_chunks_r)
+      {
+	SigSpec s(c), u;
+	bool ok = ce.eval(s, u);
+
+	if (!ok)
+	  log_error("Can't evaluate %s: Missing value for %s!\n",
+		    log_signal(s), log_signal(u));
+
+	log(" %s", s.as_const().as_string().c_str());
+      }
+    log(" |");
+
+
+    for (auto &c : out_chunks_r)
+      {
+	SigSpec s(c), u;
+	bool ok = ce.eval(s, u);
+
+	if (!ok)
+	  log_error("Can't evaluate %s: Missing value for %s!\n",
+		    log_signal(s), log_signal(u));
+
+	log(" %s", s.as_const().as_string().c_str());
+
+	Const outval=s.as_const();
+	for(State st: outval.bits) {
+	  entry->add_outputs(st==State::S1);
+	}
+      }
+    log("\n");
+
+       printf("INSERTED ENTRY FOR CELL TYPE %s\n %s\n",log_id(cell->type),entry->DebugString().c_str());
+    ce.pop();
+
+    invalue = RTLIL::const_add(invalue, Const(1, 1), false, false, GetSize(invalue));
+  } while (invalue.as_bool());
+  return result;
+}
+
+
+
+std::string TruthTableEntry_get_commitment(const yosysZKP::TruthTableEntry& e) {
+  std::string buf(SHA256::DIGESTSIZE,0);
+    
+  std::string serialized=e.SerializeAsString();
+  SHA256().CalculateDigest((byte*)buf.data(),(byte*)serialized.data(),serialized.length());
+  return buf;
+}
+
+bool TruthTableEntry_verify_computation(const yosysZKP::TruthTableEntry& e, const vector<bool>& i, const vector<bool>& o) {
+  if(i.size()!=e.inputs_size() || o.size() != e.outputs_size()) {
+    log_error("Tried to verify computation with wrong sized vector\n");
+  }
+  for(size_t n=0; n<i.size(); n++) 
+    if(e.inputs(n)!=i[n])
+      return false;
+
+  for(size_t n=0; n<o.size(); n++)
+    if(e.outputs(n)!=o[n])
+      return false;
+  
+  return true;
+}
+
+void TruthTableEntry_scramble(RandomNumberGenerator& rand, yosysZKP::TruthTableEntry& e, const std::vector<bool>&i, const std::vector<bool>& o) {
+  for(unsigned int n=0; n<i.size(); n++){
+    e.set_inputs(n, e.inputs(n)^i[n]);
+  }
+  for(unsigned int n=0; n<o.size(); n++){
+    e.set_outputs(n, e.outputs(n)^o[n]);
+  }
+  
+  std::string* nonce=e.mutable_nonce();
+  nonce->resize(NONCE_SIZE);
+  rand.GenerateBlock((byte*)nonce->data(),NONCE_SIZE);
+}
+
+
+yosysZKP::TableCommitment TruthTable_get_commitment(const yosysZKP::TruthTable& t) {
+  yosysZKP::TableCommitment tc;
+  for(int i=0; i<t.entries_size(); i++) {
+    *tc.add_entryhashes()=TruthTableEntry_get_commitment(t.entries(i));
+  }
+  return tc;
+}
+  
+void TruthTable_scramble(yosysZKP::TruthTable& t, RandomNumberGenerator& rand, const std::vector<bool>& i, const std::vector<bool>& o) {
+  
+  for(int n=0; n<t.entries_size(); n++) {
+    TruthTableEntry_scramble(rand, *t.mutable_entries(n), i, o);
+  }
+  rand.Shuffle(t.mutable_entries()->begin(), t.mutable_entries()->end());
+}
+
+bool TruthTable_contains_entry(const yosysZKP::TruthTable& tt, const yosysZKP::TruthTableEntry& entry, const std::vector<bool>& inputkey, const std::vector<bool>& outputkey) {
+
+  std::vector<bool> unscrambledinp, unscrambledoutp;
+
+  log("a1\n");
+  for(int i=0; i<entry.inputs_size(); i++)
+    unscrambledinp.push_back(entry.inputs(i)^inputkey[i]);
+  log("a2\n");
+  for(int i=0; i<entry.outputs_size(); i++)
+    unscrambledoutp.push_back(entry.outputs(i)^outputkey[i]);
+    log("a3\n");
+  int min=0, max=tt.entries_size()-1;
+
+  while(max>min) {
+    int ave=min+(max-min)/2;
+    log("ave %d %d %d\n",min,max,ave);
+    const yosysZKP::TruthTableEntry& compentry=tt.entries(ave);
+
+    bool equal=true;
+    for(int i=compentry.inputs_size()-1; i>=0; i--) {
+      if(compentry.inputs(i) && !unscrambledinp[i]) {
+	log("smaller!\n");
+	log("%s\n",compentry.DebugString().c_str());
+	equal=false;
+	max=ave-1;
+	break;
+      }
+      if(!compentry.inputs(i) && unscrambledinp[i]) {
+	log("bigger!\n");
+	log("%s\n",compentry.DebugString().c_str());
+	equal=false;
+	min=ave+1;
+	break;
+      }
+    }
+    if(equal) {
+      min=ave;
+      max=ave;
+    }
+  }
+  if(max!=min) {
+    log("found no entry\n");
+    for(bool b:unscrambledinp)
+      log("%d ",b);
+    log("\n");
+    for(bool b:unscrambledoutp)
+      log("%d ",b);
+    log("\n");
+    log("table\n");
+    for(int i=0; i<tt.entries_size(); i++) {
+      log("%s\n",tt.entries(i).DebugString().c_str());
+    }
+    return false;
+  }
+  const yosysZKP::TruthTableEntry& comp=tt.entries(min);
+  log("a4\n");
+  bool verified=TruthTableEntry_verify_computation(comp, unscrambledinp, unscrambledoutp);
+  if(!verified) {
+    log("not verified\n");
+    for(bool b:unscrambledinp)
+      log("%d ",b);
+    log("\n");
+    for(bool b:unscrambledoutp)
+      log("%d ",b);
+    log("\n");
+    log("table\n");
+    for(int i=0; i<tt.entries_size(); i++) {
+      log("%s\n",tt.entries(i).DebugString().c_str());
+    }
+  }
+  return verified;
+}
+
+yosysZKP::Commitment commit(const yosysZKP::FullState& hiddenState) {
+  yosysZKP::Commitment comm;
+
+  for(int i=0; i<hiddenState.gates_size(); i++) {
+    const yosysZKP::TruthTable& gate=hiddenState.gates(i);
+    *comm.add_gatehashes()=TruthTable_get_commitment(gate);
+  }
+  return comm;
+}
