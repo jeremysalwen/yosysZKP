@@ -40,35 +40,7 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
     }
     
     if(!TruthTableEntry_verify_computation(entry, inputs, outputs)) {
-      log("FAIL\n entry %s\n",entry.DebugString().c_str());
-      std::vector<bool> execin,execout,keyin,keyout;
-      getGatePorts(execution, cell, execin, execout);
-      getGatePorts(keys, cell, keyin, keyout);
-      
-      log("Canonicalentry %s\n",gatesdef[cell->name].DebugString().c_str());
-      log("\ninputs ");
-      for(bool b:inputs)
-	log("%d ",b);
-      log("\noutputs ");
-      for(bool b:outputs)
-	log("%d ",b);
-
-      log("\neinputs ");
-      for(bool b:execin)
-	log("%d ",b);
-      log("\neoutputs ");
-      for(bool b:execout)
-	log("%d ",b);
-
-      log("\nkinputs ");
-      for(bool b:keyin)
-	log("%d ",b);
-      log("\nkoutputs ");
-      for(bool b:keyout)
-	log("%d ",b);
-   
       log_error("\nFailed to find corresponding truth table entry for cell %s\n",log_id(cell->name));
-      
       return false;
     }
     i++;
@@ -77,7 +49,6 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
   return true;
 }
 bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ScramblingReveal& reveal) {
-  log("done1\n");
   for(int i=0; i<commitment.gatehashes_size(); i++) {
     const yosysZKP::TableCommitment& com=commitment.gatehashes(i);
     const yosysZKP::TableCommitment& hash=TruthTable_get_commitment(reveal.gates(i));
@@ -88,33 +59,24 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
       }
     }
   }
-  log("done2\n");
 
   keys.deserialize(reveal.keys());
  
   int i=0;
   for(Cell* cell: m->cells()) {
-    log("donea\n");
     const yosysZKP::TruthTable& table=reveal.gates(i);
-    log("done3\n");
     const yosysZKP::TruthTable& canonical=gatesdef[cell->name];
     
     std::vector<bool> inputkeys, outputkeys;
     getGatePorts(keys, cell, inputkeys, outputkeys);
-    log("done4\n");
     for(const yosysZKP::TruthTableEntry& entry: table.entries()) {
-      log("in1\n");
       if(!TruthTable_contains_entry(canonical, entry, inputkeys, outputkeys)) {
-	
-	log("def\n%s\n scrambled\n%s\n",gatesdef[cell->name].DebugString().c_str(), gates[cell->name].DebugString().c_str());
-log_error("Failed to find corresponding truth table entry for cell %s\n",log_id(cell->name));
+	log_error("Failed to find match truth tables for cell %s\n",log_id(cell->name));
 	return false;
       }
-      log("in2\n");
     }
     i++;
   }
-  log("done5\n");
   return true;
 }
 
@@ -146,9 +108,7 @@ ScrambledCircuit::ScrambledCircuit(Module* module): rand(), m(module), sigmap(m)
   seed.CleanNew(32+16);
   rand.SetKeyWithIV(seed, 32, seed + 32, 16);
 
-  printf("pre\n");
   enumerateWires();
-  printf("enumerated\n");
   initializeCellTables();
 }
   
@@ -176,12 +136,10 @@ void ScrambledCircuit::enumerateWires() {
   }
 }
 yosysZKP::Commitment ScrambledCircuit::createProofRound() {
-  printf("step0\n");
   keys.map.clear();
   for(auto& it:execution.map) {
     keys.map[it.first]=rand.GenerateBit();
   }
-  printf("step1\n");
   serializedState.clear_gates(); 
   for(Cell* cell:m->cells()) {
     std::vector<bool> inputkey;
@@ -189,14 +147,11 @@ yosysZKP::Commitment ScrambledCircuit::createProofRound() {
     getGatePorts(keys, cell, inputkey, outputkey);
     
     gates[cell->name]=gatesdef[cell->name];
-    log("ok1\n");
     TruthTable_check(gatesdef[cell->name]);
-    log("ok2\n");
     TruthTable_scramble(gates[cell->name], rand, inputkey, outputkey);
     TruthTable_check(gates[cell->name]);
     *serializedState.add_gates()=gates[cell->name];
   }
-  printf("step2\n");
 
   return commit(serializedState);
 
@@ -206,14 +161,11 @@ yosysZKP::Commitment ScrambledCircuit::createProofRound() {
 void ScrambledCircuit::execute(Const inputs) {
   ConstEval ce(m);
   ce.push();
-  printf("setting1\n");
-  printf("%d %d\n",allinputs.size(),inputs.size());
-  log("%s %s\n",log_signal(allinputs),log_signal(inputs));
   ce.set(allinputs, inputs);
-  printf("setting2\n");
+
   SigSpec sig_wires=allwires, sig_undef;
   if(!ce.eval(sig_wires, sig_undef)) {
-    log("Eval failed for execute: Missing value for %s\n", log_signal(sig_undef));
+    log_error("Eval failed for execute: Missing value for %s\n", log_signal(sig_undef));
   }
   execution.map.clear();
   for(int i=0; i<allwires.size(); i++) {
@@ -227,7 +179,6 @@ void ScrambledCircuit::initializeCellTables() {
   for(Cell* c:m->cells()) {
     gatesdef[c->name]=TruthTable_from_gate(c);
   }
-  printf("gatesdone\n");
 }
 
 yosysZKP::ExecutionReveal ScrambledCircuit::reveal_execution() {
@@ -241,9 +192,6 @@ yosysZKP::ExecutionReveal ScrambledCircuit::reveal_execution() {
   }
 
   for(Cell* cell: m->cells()) {
-     if(cell->name.str().find("$and$test_synth.v:1537$2")!=std::string::npos) {
-       log("DID FIND\n");
-     }
     const yosysZKP::TruthTable& g=gates[cell->name];
 
     std::vector<bool> inputval,  inputkey;
@@ -253,9 +201,7 @@ yosysZKP::ExecutionReveal ScrambledCircuit::reveal_execution() {
     getGatePorts(keys, cell, inputkey, outputkey);
 
     int count=0;
-    printf("Entries size %d\n",g.entries_size());
     for(const yosysZKP::TruthTableEntry& e: g.entries()) {
-      printf("checking input \n%s\n",e.DebugString().c_str());
       
       for(size_t i=0; i<inputval.size(); i++)
 	if(e.inputs(i) !=(inputval[i]^inputkey[i])) 
@@ -265,27 +211,6 @@ yosysZKP::ExecutionReveal ScrambledCircuit::reveal_execution() {
 	if(e.outputs(i) != (outputval[i]^outputkey[i]))
 	  log_error("Error, truth table does not match computed execution for cell %s %s\n",log_id(cell->type), log_id(cell->name));
 
-      if(cell->name.str().find("$and$test_synth.v:1537$2")!=std::string::npos) {
-	log("ENTRY IS\n %s\n",e.DebugString().c_str());
-	log("inputval ");
-	for(bool b:inputval)
-	  log("%d ",b);
-	log("\n");
-	log("outputval ");
-	for(bool b:outputval)
-	  log("%d ",b);
-	log("\n");
-
-	log("inputkey ");
-	for(bool b:inputkey)
-	  log("%d ",b);
-	log("\n");
-	log("outputkey ");
-	for(bool b:outputkey)
-	  log("%d ",b);
-	log("\n");
-
-      }
       *exec.add_entries()=e;
       count++;
     loop_continue: ;

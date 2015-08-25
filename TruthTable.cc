@@ -16,10 +16,11 @@ void TruthTable_check(const yosysZKP::TruthTable& t) {
 	if(t.entries(i).inputs(k)!=t.entries(j).inputs(k))
 	  matches=false;
       if(matches)
-	log_error("DUPLICATE ENTRY\n");
+	log_error("Truth Table integrity check failed\n");
     }
   }
 }
+
 
 yosysZKP::TruthTable TruthTable_from_gate(Cell* cell) {
   yosysZKP::TruthTable result;
@@ -48,21 +49,7 @@ yosysZKP::TruthTable TruthTable_from_gate(Cell* cell) {
   // print truth table header
   vector<RTLIL::SigChunk> in_chunks_r = inputs.chunks();
   vector<RTLIL::SigChunk> out_chunks_r = outputs.chunks();
-
-  for (auto &c : in_chunks_r)
-    log(" %*s", c.width, log_id(c.wire));
-  log(" |");
-  for (auto &c : out_chunks_r)
-    log(" %*s", c.width, log_id(c.wire));
-  log("\n");
-
-  for (auto &c : in_chunks_r)
-    log(" %.*s", c.width, "----------------------------");
-  log(" |");
-  for (auto &c : out_chunks_r)
-    log(" %.*s", c.width, "----------------------------");
-  log("\n");
-    
+  
   // create truth table
 
   ConstEval ce(&mod);
@@ -87,10 +74,7 @@ yosysZKP::TruthTable TruthTable_from_gate(Cell* cell) {
 	  log_error("Can't evaluate %s: Missing value for %s!\n",
 		    log_signal(s), log_signal(u));
 
-	log(" %s", s.as_const().as_string().c_str());
       }
-    log(" |");
-
 
     for (auto &c : out_chunks_r)
       {
@@ -101,16 +85,12 @@ yosysZKP::TruthTable TruthTable_from_gate(Cell* cell) {
 	  log_error("Can't evaluate %s: Missing value for %s!\n",
 		    log_signal(s), log_signal(u));
 
-	log(" %s", s.as_const().as_string().c_str());
-
 	Const outval=s.as_const();
 	for(State st: outval.bits) {
 	  entry->add_outputs(st==State::S1);
 	}
       }
-    log("\n");
 
-       printf("INSERTED ENTRY FOR CELL TYPE %s\n %s\n",log_id(cell->type),entry->DebugString().c_str());
     ce.pop();
 
     invalue = RTLIL::const_add(invalue, Const(1, 1), false, false, GetSize(invalue));
@@ -177,32 +157,24 @@ bool TruthTable_contains_entry(const yosysZKP::TruthTable& tt, const yosysZKP::T
 
   std::vector<bool> unscrambledinp, unscrambledoutp;
 
-  log("a1\n");
   for(int i=0; i<entry.inputs_size(); i++)
     unscrambledinp.push_back(entry.inputs(i)^inputkey[i]);
-  log("a2\n");
   for(int i=0; i<entry.outputs_size(); i++)
     unscrambledoutp.push_back(entry.outputs(i)^outputkey[i]);
-    log("a3\n");
   int min=0, max=tt.entries_size()-1;
 
   while(max>min) {
     int ave=min+(max-min)/2;
-    log("ave %d %d %d\n",min,max,ave);
     const yosysZKP::TruthTableEntry& compentry=tt.entries(ave);
 
     bool equal=true;
     for(int i=compentry.inputs_size()-1; i>=0; i--) {
       if(compentry.inputs(i) && !unscrambledinp[i]) {
-	log("smaller!\n");
-	log("%s\n",compentry.DebugString().c_str());
 	equal=false;
 	max=ave-1;
 	break;
       }
       if(!compentry.inputs(i) && unscrambledinp[i]) {
-	log("bigger!\n");
-	log("%s\n",compentry.DebugString().c_str());
 	equal=false;
 	min=ave+1;
 	break;
@@ -214,36 +186,10 @@ bool TruthTable_contains_entry(const yosysZKP::TruthTable& tt, const yosysZKP::T
     }
   }
   if(max!=min) {
-    log("found no entry\n");
-    for(bool b:unscrambledinp)
-      log("%d ",b);
-    log("\n");
-    for(bool b:unscrambledoutp)
-      log("%d ",b);
-    log("\n");
-    log("table\n");
-    for(int i=0; i<tt.entries_size(); i++) {
-      log("%s\n",tt.entries(i).DebugString().c_str());
-    }
     return false;
   }
   const yosysZKP::TruthTableEntry& comp=tt.entries(min);
-  log("a4\n");
-  bool verified=TruthTableEntry_verify_computation(comp, unscrambledinp, unscrambledoutp);
-  if(!verified) {
-    log("not verified\n");
-    for(bool b:unscrambledinp)
-      log("%d ",b);
-    log("\n");
-    for(bool b:unscrambledoutp)
-      log("%d ",b);
-    log("\n");
-    log("table\n");
-    for(int i=0; i<tt.entries_size(); i++) {
-      log("%s\n",tt.entries(i).DebugString().c_str());
-    }
-  }
-  return verified;
+  return TruthTableEntry_verify_computation(comp, unscrambledinp, unscrambledoutp);
 }
 
 yosysZKP::Commitment commit(const yosysZKP::FullState& hiddenState) {

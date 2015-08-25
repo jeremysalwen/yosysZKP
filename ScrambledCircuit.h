@@ -35,11 +35,7 @@ struct ScrambledCircuit {
   void getGatePorts(WireValues& values, const Yosys::Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs);
   
   ScrambledCircuit(Yosys::Module* module);
-  
-  void enumerateWires();
-
-  void initializeCellTables();
-
+ 
   void execute(Yosys::Const inputs);
   
   yosysZKP::Commitment createProofRound();
@@ -51,6 +47,10 @@ struct ScrambledCircuit {
   bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ExecutionReveal& reveal);
   bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ScramblingReveal& reveal);
 
+private:
+  void enumerateWires();
+
+  void initializeCellTables();
 
 };
 
