@@ -29,6 +29,23 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
   //Validate that the execution trace matches the revealed gates
   WireValues scrambledexec(m);
   scrambledexec.deserialize(reveal.exec());
+
+  
+  for(int i=0; i<alloutputs.size(); i++) {
+    const SigBit& s=alloutputs[i];
+    bool b;
+    if(s.wire!=nullptr) {
+      b=scrambledexec.map[s.wire];
+    } else {
+      b=s.data;
+    }
+    if(b!=commitment.output(i)) {
+      log_error("Output does not match commitment\n");
+      return false;
+    }
+  }
+
+    
   int i=0;
   for(Cell* cell: m->cells()) {
     const yosysZKP::TruthTableEntry& entry=reveal.entries(i);
@@ -40,7 +57,7 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
     }
     
     if(!TruthTableEntry_verify_computation(entry, inputs, outputs)) {
-      log_error("\nFailed to find corresponding truth table entry for cell %s\n",log_id(cell->name));
+      log_error("Failed to find corresponding truth table entry for cell %s\n",log_id(cell->name));
       return false;
     }
     i++;
@@ -61,7 +78,14 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
   }
 
   keys.deserialize(reveal.keys());
- 
+
+  for(const SigBit& b:alloutputs) {
+    if(b.wire!=nullptr && keys.map[b.wire]!=0) {
+      log_error("Output key was not empty\n");
+      return false;
+    }
+  }
+  
   int i=0;
   for(Cell* cell: m->cells()) {
     const yosysZKP::TruthTable& table=reveal.gates(i);
@@ -135,44 +159,67 @@ void ScrambledCircuit::enumerateWires() {
     }
   }
 }
+
 yosysZKP::Commitment ScrambledCircuit::createProofRound() {
+  yosysZKP::Commitment result;
+
   keys.map.clear();
   for(auto& it:execution.map) {
     keys.map[it.first]=rand.GenerateBit();
   }
-  serializedState.clear_gates(); 
+
   for(Cell* cell:m->cells()) {
     std::vector<bool> inputkey;
     std::vector<bool> outputkey;
     getGatePorts(keys, cell, inputkey, outputkey);
     
     gates[cell->name]=gatesdef[cell->name];
-    TruthTable_check(gatesdef[cell->name]);
     TruthTable_scramble(gates[cell->name], rand, inputkey, outputkey);
-    TruthTable_check(gates[cell->name]);
-    *serializedState.add_gates()=gates[cell->name];
+    *result.add_gatehashes()=TruthTable_get_commitment(gates[cell->name]);
   }
 
-  return commit(serializedState);
+  for(const SigBit& s: alloutputs) {
+    bool b;
+    if(s.wire!=nullptr) {
+      keys.map[s.wire]=0;
+      b=execution.map[s.wire];
+    } else {
+      b=(s.data==State::S1);
+    }
+    result.add_output(b);
+  }
 
+  return result;
 }
 
   
-void ScrambledCircuit::execute(Const inputs) {
+Const ScrambledCircuit::execute(Const inputs) {
   ConstEval ce(m);
   ce.push();
   ce.set(allinputs, inputs);
-
-  SigSpec sig_wires=allwires, sig_undef;
-  if(!ce.eval(sig_wires, sig_undef)) {
-    log_error("Eval failed for execute: Missing value for %s\n", log_signal(sig_undef));
+  {
+    SigSpec sig_wires=allwires, sig_undef;
+    if(!ce.eval(sig_wires, sig_undef)) {
+      log_error("Eval failed for execute: Missing value for %s\n", log_signal(sig_undef));
+    }
+    execution.map.clear();
+    for(int i=0; i<allwires.size(); i++) {
+      Wire* w=allwires[i].wire;
+      execution.map[w]=(sig_wires[i]==State::S1);
+    }
   }
-  execution.map.clear();
-  for(int i=0; i<allwires.size(); i++) {
-    Wire* w=allwires[i].wire;
-    execution.map[w]=(sig_wires[i]==State::S1);
+  Const result;
+  {
+    SigSpec sig_out=alloutputs, sig_undef;
+    if(!ce.eval(sig_out, sig_undef)) {
+      log_error("Eval failed for execute: Missing value for %s\n", log_signal(sig_undef));
+    }
+
+    result=sig_out.as_const();
   }
   ce.pop();
+
+  return result;
 }
 
 void ScrambledCircuit::initializeCellTables() {
@@ -225,7 +272,10 @@ yosysZKP::ExecutionReveal ScrambledCircuit::reveal_execution() {
 yosysZKP::ScramblingReveal ScrambledCircuit::reveal_scrambling() {
   yosysZKP::ScramblingReveal scr;
   *scr.mutable_keys()=keys.serialize();
-  *scr.mutable_gates()=serializedState.gates();
+  for(Cell* cell:m->cells()) {
+    *scr.add_gates()=gates[cell->name];
+  }
+ 
   return scr;
 }
 

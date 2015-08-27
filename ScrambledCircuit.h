@@ -22,8 +22,6 @@ struct ScrambledCircuit {
   Yosys::dict<Yosys::IdString, yosysZKP::TruthTable> gatesdef;
   Yosys::dict<Yosys::IdString, yosysZKP::TruthTable> gates;
 
-  yosysZKP::FullState serializedState;
-
   WireValues execution;
   WireValues keys;
   
@@ -36,10 +34,9 @@ struct ScrambledCircuit {
   
   ScrambledCircuit(Yosys::Module* module);
  
-  void execute(Yosys::Const inputs);
+  Yosys::Const execute(Yosys::Const inputs);
   
   yosysZKP::Commitment createProofRound();
-
 
   yosysZKP::ExecutionReveal reveal_execution();
   yosysZKP::ScramblingReveal reveal_scrambling();

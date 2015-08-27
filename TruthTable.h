@@ -16,8 +16,4 @@ void TruthTable_scramble(yosysZKP::TruthTable& t, CryptoPP::RandomNumberGenerato
 bool TruthTable_contains_entry(const yosysZKP::TruthTable& tt, const yosysZKP::TruthTableEntry& entry, const std::vector<bool>& inputkey, const std::vector<bool>& outputkey);
 void TruthTable_check(const yosysZKP::TruthTable& t);
 
-
-yosysZKP::Commitment commit(const yosysZKP::FullState& hiddenState);
-
-
 #endif //TRUTH_TABLE_H

@@ -18,19 +18,18 @@ message TruthTable {
   repeated TruthTableEntry entries = 1;
 }
 
-message FullState {  
-  repeated TruthTable gates = 1;
-}
-
-
 message TableCommitment {
   repeated bytes entryhashes =1;
 }
 
 message Commitment {
-  repeated TableCommitment gatehashes = 1;
+  repeated bool output =1;
+  repeated TableCommitment gatehashes = 2;
 }
 
+message Commitments {
+  repeated Commitment rounds =2;
+}
 message ExecutionReveal {
   required WireValues exec = 1;
   repeated TruthTableEntry entries = 2;
@@ -39,4 +38,26 @@ message ExecutionReveal {
 message ScramblingReveal {
   required WireValues keys = 1;
   repeated TruthTable gates = 2;
+}
+
+message ProverSecret {
+  optional ExecutionReveal execution = 1;
+  optional ScramblingReveal scrambling = 2;
+}
+
+message ProverState {
+  repeated ProverSecret round = 1;
+}
+
+message RevealRequest {
+ repeated bool scrambling =1;
+}
+
+message ProveeState {
+  repeated bool output =1;
+  required int32 security_param =2;
+  required int32 confidence =3;
+
+  required Commitments commitment=4;
+  required RevealRequest request=5;
 }

@@ -191,13 +191,3 @@ bool TruthTable_contains_entry(const yosysZKP::TruthTable& tt, const yosysZKP::T
   const yosysZKP::TruthTableEntry& comp=tt.entries(min);
   return TruthTableEntry_verify_computation(comp, unscrambledinp, unscrambledoutp);
 }
-
-yosysZKP::Commitment commit(const yosysZKP::FullState& hiddenState) {
-  yosysZKP::Commitment comm;
-
-  for(int i=0; i<hiddenState.gates_size(); i++) {
-    const yosysZKP::TruthTable& gate=hiddenState.gates(i);
-    *comm.add_gatehashes()=TruthTable_get_commitment(gate);
-  }
-  return comm;
-}
