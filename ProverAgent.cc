@@ -9,6 +9,7 @@ ProverAgent::ProverAgent(Module* m) : circuit(m), security_param(128) {}
 void ProverAgent::set_data(Const in, Const out) {
   Const o=circuit.execute(in);
   if(o!=out) {
+    log("%s\n",o.as_string().c_str());
     throw std::runtime_error("Input does not produce required output\n");
   }
 }
