@@ -23,14 +23,14 @@ the agreed upon outputs. They should also agree on a level of security
   The secret is kept private, and the commitment is sent to PROVEE.
 
 3. The PROVEE records the commitment and responds to PROVER with a challenge
-    provee_respond in.comm provee.state out.resp
+   $provee_respond in.comm provee.state out.resp
 
    The response is sent to PROVER
 
 4. The PROVER responds to the challenge using his stored secret
-   prover_reveal in.secret in.resp out.reveal
+   $prover_reveal in.secret in.resp out.reveal
 
    The reveal is sent to the PROVEE
 
 5. The PROVEE verifies that the response is acceptable and the proof is valid
-   provee_validate file.v module outputs.dat security_param provee.state in.reveal
+   $provee_validate file.v module outputs.dat security_param provee.state in.reveal
