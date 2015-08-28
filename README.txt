@@ -30,7 +30,7 @@ the agreed upon outputs. They should also agree on a level of security
 4. The PROVER responds to the challenge using his stored secret
    prover_reveal in.secret in.resp out.reveal
 
+   The reveal is sent to the PROVEE
+
 5. The PROVEE verifies that the response is acceptable and the proof is valid
    provee_validate file.v module outputs.dat security_param provee.state in.reveal
-
-
