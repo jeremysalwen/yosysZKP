@@ -109,7 +109,7 @@ std::string TruthTableEntry_get_commitment(const yosysZKP::TruthTableEntry& e) {
 }
 
 bool TruthTableEntry_verify_computation(const yosysZKP::TruthTableEntry& e, const vector<bool>& i, const vector<bool>& o) {
-  if(i.size()!=e.inputs_size() || o.size() != e.outputs_size()) {
+  if(i.size()!=(unsigned)e.inputs_size() || o.size() != (unsigned)e.outputs_size()) {
     log_error("Tried to verify computation with wrong sized vector\n");
   }
   for(size_t n=0; n<i.size(); n++) 

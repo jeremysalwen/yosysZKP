@@ -12,7 +12,7 @@
 
 
 struct ScrambledCircuit {
-  CryptoPP::OFB_Mode<CryptoPP::AES>::Encryption rand;
+  CryptoPP::AutoSeededRandomPool rand;
   
   Yosys::Module* m;
 
@@ -27,14 +27,13 @@ struct ScrambledCircuit {
   Yosys::SigSpec alloutputs;
 
   Yosys::SigSpec allwires;
-
-  void getGatePorts(WireValues& values, const Yosys::Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs, bool zeroconst=false);
   
   ScrambledCircuit(Yosys::Module* module);
- 
+
+   
   Yosys::Const execute(Yosys::Const inputs);
   
-  yosysZKP::Commitment createProofRound();
+  yosysZKP::Commitment create_proof_round();
 
   yosysZKP::ExecutionReveal reveal_execution();
   yosysZKP::ScramblingReveal reveal_scrambling();
@@ -43,9 +42,11 @@ struct ScrambledCircuit {
   bool validate_precommitment(const yosysZKP::Commitment& commitment, const yosysZKP::ScramblingReveal& reveal);
 
 private:
-  void enumerateWires();
+  void enumerate_wires();
 
-  void initializeCellTables();
+  void initialize_cell_tables();
+
+  void get_gate_ports(WireValues& values, const Yosys::Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs, bool zeroconst=false);
 
 };
 

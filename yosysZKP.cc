@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     CodedFileWriter cs(argv[8],MAGIC_COMMITMENT);
     
     for(int i=0; i<security_param; i++) {
-      yosysZKP::Commitment comm=circuit.createProofRound();
+      yosysZKP::Commitment comm=circuit.create_proof_round();
       cs.WriteToStream(&comm);
       
       yosysZKP::ProverSecret sec;
