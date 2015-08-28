@@ -1,12 +1,15 @@
 yosysZKP is a tool for performing Zero-Knowledge Proofs.
 
-For information about Zero Knowledge proofs see https://en.wikipedia.org/wiki/Zero-knowledge_proof
+For information about Zero Knowledge proofs see 
+https://en.wikipedia.org/wiki/Zero-knowledge_proof
 
-yosysZKP uses a protocol which is very much like http://eprint.iacr.org/2014/934.pdf 
-but which was independently derived from http://eprint.iacr.org/2013/073/20130220:185223
+yosysZKP uses a protocol which is very much like 
+http://eprint.iacr.org/2014/934.pdf but which was independently derived 
+from http://eprint.iacr.org/2013/073/20130220:185223
 
-yosysZKP is meant to be practical in the sense that a non-expert should be able to use yosysZKP to 
-prove non-trivial statements to a third-party.
+yosysZKP is meant to be practical in the sense that a non-expert should 
+be able to use yosysZKP to prove non-trivial statements to a 
+third-party.
 
 
 The protocol:
@@ -16,6 +19,9 @@ The protocol:
 PROVEE that the circuit applied to PROVER's secret inputs will produce 
 the agreed upon outputs. They should also agree on a level of security 
 (128 bits should be enough).
+
+The circuit file should be already synthesized, so it is composed entirely of 
+low level gates.  In order to do this you can run  `yosys -o out.v -S in.v`
 
 2. The PROVER creates the intitial secret and commitment
    $yosysZKP prover_create file.v module inputs.dat outputs.dat security_param out.secret out.comm
