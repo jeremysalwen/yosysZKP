@@ -1,4 +1,6 @@
 yosysZKP
 .clang_complete
-yosysZKP.d
-yosysZKP.cc~
+*.d
+*.cc~
+*.h~
+messages.pb.*
