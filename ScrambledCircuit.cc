@@ -29,7 +29,6 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
   //Validate that the execution trace matches the revealed gates
   WireValues scrambledexec(m);
   scrambledexec.deserialize(reveal.exec());
-
   
   for(int i=0; i<alloutputs.size(); i++) {
     const SigBit& s=alloutputs[i];
@@ -40,7 +39,7 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
       b=s.data;
     }
     if(b!=commitment.output(i)) {
-      log_error("Output does not match commitment\n");
+      log_error("Output does not match commitment\n");      
       return false;
     }
   }
@@ -78,7 +77,7 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
   }
 
   keys.deserialize(reveal.keys());
-
+  
   for(const SigBit& b:alloutputs) {
     if(b.wire!=nullptr && keys.map[b.wire->name]!=0) {
       log_error("Output key was not empty\n");
@@ -201,8 +200,8 @@ Const ScrambledCircuit::execute(Const inputs) {
       execution.map[w->name]=(sig_wires[i]==State::S1);
       keys.map[w->name]=0;
     }
-    execution.map.sort();
-    keys.map.sort();
+    execution.map.sort(RTLIL::sort_by_id_str());
+    keys.map.sort(RTLIL::sort_by_id_str());
   }
   Const result;
   {

@@ -35,14 +35,19 @@ Module* load_module(std::string filename, std::string modulename) {
   Pass::call(design, "splitnets -ports");
 
   design->sort();
-  return design->module("\\"+modulename);
+
+  Module* result=design->module("\\"+modulename);
+  if(result==nullptr) {
+    log_error("Could not find module %s in file\n",modulename.c_str());
+  }
+  return result;
 }
 
 
 
 int main(int argc, char** argv)
 {
-  if(argc < 6) {
+  if(argc < 5) {
     printf("Usage:\n");
     printf("%s prover_create file.v module inputs.dat outputs.dat security_param out.secret out.comm \n",argv[0]);
     printf("%s provee_respond in.comm provee.state out.resp\n",argv[0]);
@@ -55,7 +60,7 @@ int main(int argc, char** argv)
   Yosys::log_error_stderr = true;
     
   Yosys::yosys_setup();
-  
+
   string action(argv[1]);
   if(action=="prover_create") {
     if(argc!=9) {
@@ -102,9 +107,8 @@ int main(int argc, char** argv)
     CodedFileWriter os(argv[3],MAGIC_PROVEE);
 
     yosysZKP::RevealRequest request;
-    while(!is.cis.ConsumedEntireMessage()) {
-      yosysZKP::ProveeState roundstate;
-      is.ReadFromStream(roundstate.mutable_commitment());
+    yosysZKP::ProveeState roundstate;
+    while(is.ReadFromStream(roundstate.mutable_commitment())) {
       
       bool scrambled= rand.GenerateBit();
       roundstate.set_scrambling(scrambled);
@@ -115,6 +119,7 @@ int main(int argc, char** argv)
     }
 
     CodedFileWriter ros(argv[4],MAGIC_REQUEST);
+
     ros.WriteToStream(&request);
 
   } else if(action=="prover_reveal") {
@@ -135,11 +140,12 @@ int main(int argc, char** argv)
     for(bool b:request.scrambling()) {
       sis.ReadFromStream(&secret);
 
-      if(b) {
-	os.WriteToStream(&secret.scrambling());
+      if(b) { //Clear the field we don't want to reveal
+	secret.clear_execution();
       } else {
-	os.WriteToStream(&secret.execution());
+	secret.clear_scrambling();
       }
+	os.WriteToStream(&secret);
     }
     
     //Remove the secret because otherwise ppl will do dumb stuff with it like reveal it twice...
@@ -161,13 +167,10 @@ int main(int argc, char** argv)
 
     int count=0;
 
-    while(!ss.cis.ConsumedEntireMessage()) {
-      if(rs.cis.ConsumedEntireMessage()) {
-	log_error("Mismatch between commitment and reveal!\n");
-      }
-      
-      yosysZKP::ProveeState state;
-      ss.ReadFromStream(&state);
+    yosysZKP::ProveeState state;
+    yosysZKP::ProverSecret secret;
+
+    while(ss.ReadFromStream(&state)) {
       if(state.commitment().output_size()!=outputs.size()) {
 	log_error("Outputs do not match requirements\n");
       }
@@ -177,8 +180,9 @@ int main(int argc, char** argv)
 	}
       }
 
-      yosysZKP::ProverSecret secret;
-      rs.ReadFromStream(&secret);
+      if(!rs.ReadFromStream(&secret)) {
+	log_error("Mismatch between commitment and reveal!\n");
+      }
 
       bool validated;
       if(state.scrambling()) {
@@ -191,9 +195,6 @@ int main(int argc, char** argv)
       }
       count++;
     }
-    if(!rs.cis.ConsumedEntireMessage()) {
-      log_error("Mismatch between commitment and reveal!\n");
-    }
 
     if(count>=security_param) {
       log("SUCCESS: Proven with confidence 2^-%d\n",count);
@@ -201,6 +202,8 @@ int main(int argc, char** argv)
       log_error("Not enough proof rounds to satisfy security requirement\n");
     }
 
+  } else {
+    log_error("Unkown action %s\n",action.c_str());
   }
 
 Yosys::yosys_shutdown();

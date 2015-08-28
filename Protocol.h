@@ -29,12 +29,15 @@ class CodedFileReader {
       }
   }
   template<typename T>
-    void ReadFromStream(T* t) {
+    bool ReadFromStream(T* t) {
     uint64_t sz;
-    cis.ReadLittleEndian64(&sz);
+    if(!cis.ReadLittleEndian64(&sz)) {
+      return false;
+    }
     google::protobuf::io::CodedInputStream::Limit l=cis.PushLimit(sz);
-    t->ParseFromCodedStream(&cis);
+    bool res=t->ParseFromCodedStream(&cis);
     cis.PopLimit(l);
+    return res;
   }
   
 };
