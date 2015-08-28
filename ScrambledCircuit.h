@@ -30,7 +30,7 @@ struct ScrambledCircuit {
 
   Yosys::SigSpec allwires;
 
-  void getGatePorts(WireValues& values, const Yosys::Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs);
+  void getGatePorts(WireValues& values, const Yosys::Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs, bool zeroconst=false);
   
   ScrambledCircuit(Yosys::Module* module);
  

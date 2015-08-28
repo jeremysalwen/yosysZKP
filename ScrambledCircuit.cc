@@ -105,16 +105,14 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
 }
 
 
-void ScrambledCircuit::getGatePorts(WireValues& values, const Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs) {
+void ScrambledCircuit::getGatePorts(WireValues& values, const Cell* cell, std::vector<bool>& inputs, std::vector<bool>& outputs, bool zeroconst) {
   inputs.clear();
   outputs.clear();
   for(auto& it:cell->connections()) {
     bool input=cell->input(it.first);
-    bool output=cell->output(it.first);
-    log_assert(input || output);
-    SigSpec con=sigmap(it.second);
-    for(const SigBit& b:con) {
-      char bit=0;
+
+    for(const SigBit& b:it.second) {
+      char bit=zeroconst?0:b.data;
       if(b.wire!=nullptr){
 	bit=values.map[b.wire];
       }
@@ -132,6 +130,7 @@ ScrambledCircuit::ScrambledCircuit(Module* module): rand(), m(module), sigmap(m)
   seed.CleanNew(32+16);
   rand.SetKeyWithIV(seed, 32, seed + 32, 16);
 
+  m->sort();
   enumerateWires();
   initializeCellTables();
 }
@@ -157,6 +156,13 @@ void ScrambledCircuit::enumerateWires() {
     if(ct.cell_output(m->name,s)) {
       alloutputs.append(m->wire(s));
     }
+  }
+
+  for(Cell* cell:m->cells()) {
+    for(auto& it:cell->connections()) {
+      cell->setPort(it.first,sigmap(it.second));
+    }
+    cell->sort();
   }
 }
 
