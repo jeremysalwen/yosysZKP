@@ -13,7 +13,7 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
   for(int i=0; i<commitment.gatehashes_size(); i++) {
     const yosysZKP::TableCommitment& com=commitment.gatehashes(i);
     std::string entryhash=TruthTableEntry_get_commitment(reveal.entries(i));
-    
+
     bool found=false;
     for(int j=0; j<com.entryhashes_size(); j++) {
       if(com.entryhashes(j) == entryhash) {
@@ -35,7 +35,7 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
     const SigBit& s=alloutputs[i];
     bool b;
     if(s.wire!=nullptr) {
-      b=scrambledexec.map[s.wire];
+      b=scrambledexec.map[s.wire->name];
     } else {
       b=s.data;
     }
@@ -80,7 +80,7 @@ bool ScrambledCircuit::validate_precommitment(const yosysZKP::Commitment& commit
   keys.deserialize(reveal.keys());
 
   for(const SigBit& b:alloutputs) {
-    if(b.wire!=nullptr && keys.map[b.wire]!=0) {
+    if(b.wire!=nullptr && keys.map[b.wire->name]!=0) {
       log_error("Output key was not empty\n");
       return false;
     }
@@ -114,7 +114,7 @@ void ScrambledCircuit::getGatePorts(WireValues& values, const Cell* cell, std::v
     for(const SigBit& b:it.second) {
       char bit=zeroconst?0:b.data;
       if(b.wire!=nullptr){
-	bit=values.map[b.wire];
+	bit=values.map[b.wire->name];
       }
       if(input) {
 	inputs.push_back(bit);
@@ -125,7 +125,7 @@ void ScrambledCircuit::getGatePorts(WireValues& values, const Cell* cell, std::v
   }
 }
 
-ScrambledCircuit::ScrambledCircuit(Module* module): rand(), m(module), sigmap(m),execution(m), keys(m) {
+ScrambledCircuit::ScrambledCircuit(Module* module): rand(), m(module), execution(m), keys(m) {
   SecByteBlock seed(32 + 16);
   seed.CleanNew(32+16);
   rand.SetKeyWithIV(seed, 32, seed + 32, 16);
@@ -139,13 +139,7 @@ void ScrambledCircuit::enumerateWires() {
   {
     pool<Wire*> wires;
     for(Wire* w:m->wires()) {
-      SigBit s=sigmap(w);
-      log_assert(s.wire!=nullptr);
-      if(!wires.count(s.wire)) {
-	wires.insert(s.wire);
-
-	allwires.append(s.wire);
-      }
+      allwires.append(w);
     }
   }
   CellTypes ct(m->design);
@@ -157,19 +151,11 @@ void ScrambledCircuit::enumerateWires() {
       alloutputs.append(m->wire(s));
     }
   }
-
-  for(Cell* cell:m->cells()) {
-    for(auto& it:cell->connections()) {
-      cell->setPort(it.first,sigmap(it.second));
-    }
-    cell->sort();
-  }
 }
 
 yosysZKP::Commitment ScrambledCircuit::createProofRound() {
   yosysZKP::Commitment result;
 
-  keys.map.clear();
   for(auto& it:execution.map) {
     keys.map[it.first]=rand.GenerateBit();
   }
@@ -187,8 +173,8 @@ yosysZKP::Commitment ScrambledCircuit::createProofRound() {
   for(const SigBit& s: alloutputs) {
     bool b;
     if(s.wire!=nullptr) {
-      keys.map[s.wire]=0;
-      b=execution.map[s.wire];
+      keys.map[s.wire->name]=0;
+      b=execution.map[s.wire->name];
     } else {
       b=(s.data==State::S1);
     }
@@ -209,10 +195,14 @@ Const ScrambledCircuit::execute(Const inputs) {
       log_error("Eval failed for execute: Missing value for %s\n", log_signal(sig_undef));
     }
     execution.map.clear();
+    keys.map.clear();
     for(int i=0; i<allwires.size(); i++) {
       Wire* w=allwires[i].wire;
-      execution.map[w]=(sig_wires[i]==State::S1);
+      execution.map[w->name]=(sig_wires[i]==State::S1);
+      keys.map[w->name]=0;
     }
+    execution.map.sort();
+    keys.map.sort();
   }
   Const result;
   {
@@ -239,9 +229,7 @@ yosysZKP::ExecutionReveal ScrambledCircuit::reveal_execution() {
   yosysZKP::WireValues* wv=exec.mutable_exec();
   for(const auto& it:execution.map) {
     bool bit=it.second ^keys.map[it.first];
-    yosysZKP::WireValues_Entry* entry=wv->add_entries();
-    entry->set_wirename(it.first->name.str());
-    entry->set_value(bit);
+    wv->add_entries(bit);
   }
 
   for(Cell* cell: m->cells()) {

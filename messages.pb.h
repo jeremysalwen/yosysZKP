@@ -34,114 +34,17 @@ void protobuf_AssignDesc_messages_2eproto();
 void protobuf_ShutdownFile_messages_2eproto();
 
 class WireValues;
-class WireValues_Entry;
 class TruthTableEntry;
 class TruthTable;
 class TableCommitment;
 class Commitment;
-class Commitments;
 class ExecutionReveal;
 class ScramblingReveal;
 class ProverSecret;
-class ProverState;
 class RevealRequest;
 class ProveeState;
 
 // ===================================================================
-
-class WireValues_Entry : public ::google::protobuf::Message {
- public:
-  WireValues_Entry();
-  virtual ~WireValues_Entry();
-
-  WireValues_Entry(const WireValues_Entry& from);
-
-  inline WireValues_Entry& operator=(const WireValues_Entry& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const WireValues_Entry& default_instance();
-
-  void Swap(WireValues_Entry* other);
-
-  // implements Message ----------------------------------------------
-
-  WireValues_Entry* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const WireValues_Entry& from);
-  void MergeFrom(const WireValues_Entry& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required string wirename = 1;
-  inline bool has_wirename() const;
-  inline void clear_wirename();
-  static const int kWirenameFieldNumber = 1;
-  inline const ::std::string& wirename() const;
-  inline void set_wirename(const ::std::string& value);
-  inline void set_wirename(const char* value);
-  inline void set_wirename(const char* value, size_t size);
-  inline ::std::string* mutable_wirename();
-  inline ::std::string* release_wirename();
-  inline void set_allocated_wirename(::std::string* wirename);
-
-  // required bool value = 2;
-  inline bool has_value() const;
-  inline void clear_value();
-  static const int kValueFieldNumber = 2;
-  inline bool value() const;
-  inline void set_value(bool value);
-
-  // @@protoc_insertion_point(class_scope:yosysZKP.WireValues.Entry)
- private:
-  inline void set_has_wirename();
-  inline void clear_has_wirename();
-  inline void set_has_value();
-  inline void clear_has_value();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::std::string* wirename_;
-  bool value_;
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static WireValues_Entry* default_instance_;
-};
-// -------------------------------------------------------------------
 
 class WireValues : public ::google::protobuf::Message {
  public:
@@ -194,20 +97,18 @@ class WireValues : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef WireValues_Entry Entry;
-
   // accessors -------------------------------------------------------
 
-  // repeated .yosysZKP.WireValues.Entry entries = 1;
+  // repeated bool entries = 1;
   inline int entries_size() const;
   inline void clear_entries();
   static const int kEntriesFieldNumber = 1;
-  inline const ::yosysZKP::WireValues_Entry& entries(int index) const;
-  inline ::yosysZKP::WireValues_Entry* mutable_entries(int index);
-  inline ::yosysZKP::WireValues_Entry* add_entries();
-  inline const ::google::protobuf::RepeatedPtrField< ::yosysZKP::WireValues_Entry >&
+  inline bool entries(int index) const;
+  inline void set_entries(int index, bool value);
+  inline void add_entries(bool value);
+  inline const ::google::protobuf::RepeatedField< bool >&
       entries() const;
-  inline ::google::protobuf::RepeatedPtrField< ::yosysZKP::WireValues_Entry >*
+  inline ::google::protobuf::RepeatedField< bool >*
       mutable_entries();
 
   // @@protoc_insertion_point(class_scope:yosysZKP.WireValues)
@@ -217,7 +118,7 @@ class WireValues : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::yosysZKP::WireValues_Entry > entries_;
+  ::google::protobuf::RepeatedField< bool > entries_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -600,88 +501,6 @@ class Commitment : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Commitments : public ::google::protobuf::Message {
- public:
-  Commitments();
-  virtual ~Commitments();
-
-  Commitments(const Commitments& from);
-
-  inline Commitments& operator=(const Commitments& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Commitments& default_instance();
-
-  void Swap(Commitments* other);
-
-  // implements Message ----------------------------------------------
-
-  Commitments* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Commitments& from);
-  void MergeFrom(const Commitments& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // repeated .yosysZKP.Commitment rounds = 2;
-  inline int rounds_size() const;
-  inline void clear_rounds();
-  static const int kRoundsFieldNumber = 2;
-  inline const ::yosysZKP::Commitment& rounds(int index) const;
-  inline ::yosysZKP::Commitment* mutable_rounds(int index);
-  inline ::yosysZKP::Commitment* add_rounds();
-  inline const ::google::protobuf::RepeatedPtrField< ::yosysZKP::Commitment >&
-      rounds() const;
-  inline ::google::protobuf::RepeatedPtrField< ::yosysZKP::Commitment >*
-      mutable_rounds();
-
-  // @@protoc_insertion_point(class_scope:yosysZKP.Commitments)
- private:
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::yosysZKP::Commitment > rounds_;
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static Commitments* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class ExecutionReveal : public ::google::protobuf::Message {
  public:
   ExecutionReveal();
@@ -963,88 +782,6 @@ class ProverSecret : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class ProverState : public ::google::protobuf::Message {
- public:
-  ProverState();
-  virtual ~ProverState();
-
-  ProverState(const ProverState& from);
-
-  inline ProverState& operator=(const ProverState& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const ProverState& default_instance();
-
-  void Swap(ProverState* other);
-
-  // implements Message ----------------------------------------------
-
-  ProverState* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ProverState& from);
-  void MergeFrom(const ProverState& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // repeated .yosysZKP.ProverSecret round = 1;
-  inline int round_size() const;
-  inline void clear_round();
-  static const int kRoundFieldNumber = 1;
-  inline const ::yosysZKP::ProverSecret& round(int index) const;
-  inline ::yosysZKP::ProverSecret* mutable_round(int index);
-  inline ::yosysZKP::ProverSecret* add_round();
-  inline const ::google::protobuf::RepeatedPtrField< ::yosysZKP::ProverSecret >&
-      round() const;
-  inline ::google::protobuf::RepeatedPtrField< ::yosysZKP::ProverSecret >*
-      mutable_round();
-
-  // @@protoc_insertion_point(class_scope:yosysZKP.ProverState)
- private:
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::yosysZKP::ProverSecret > round_;
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static ProverState* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class RevealRequest : public ::google::protobuf::Message {
  public:
   RevealRequest();
@@ -1180,70 +917,35 @@ class ProveeState : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated bool output = 1;
-  inline int output_size() const;
-  inline void clear_output();
-  static const int kOutputFieldNumber = 1;
-  inline bool output(int index) const;
-  inline void set_output(int index, bool value);
-  inline void add_output(bool value);
-  inline const ::google::protobuf::RepeatedField< bool >&
-      output() const;
-  inline ::google::protobuf::RepeatedField< bool >*
-      mutable_output();
+  // required bool scrambling = 1;
+  inline bool has_scrambling() const;
+  inline void clear_scrambling();
+  static const int kScramblingFieldNumber = 1;
+  inline bool scrambling() const;
+  inline void set_scrambling(bool value);
 
-  // required int32 security_param = 2;
-  inline bool has_security_param() const;
-  inline void clear_security_param();
-  static const int kSecurityParamFieldNumber = 2;
-  inline ::google::protobuf::int32 security_param() const;
-  inline void set_security_param(::google::protobuf::int32 value);
-
-  // required int32 confidence = 3;
-  inline bool has_confidence() const;
-  inline void clear_confidence();
-  static const int kConfidenceFieldNumber = 3;
-  inline ::google::protobuf::int32 confidence() const;
-  inline void set_confidence(::google::protobuf::int32 value);
-
-  // required .yosysZKP.Commitments commitment = 4;
+  // required .yosysZKP.Commitment commitment = 2;
   inline bool has_commitment() const;
   inline void clear_commitment();
-  static const int kCommitmentFieldNumber = 4;
-  inline const ::yosysZKP::Commitments& commitment() const;
-  inline ::yosysZKP::Commitments* mutable_commitment();
-  inline ::yosysZKP::Commitments* release_commitment();
-  inline void set_allocated_commitment(::yosysZKP::Commitments* commitment);
-
-  // required .yosysZKP.RevealRequest request = 5;
-  inline bool has_request() const;
-  inline void clear_request();
-  static const int kRequestFieldNumber = 5;
-  inline const ::yosysZKP::RevealRequest& request() const;
-  inline ::yosysZKP::RevealRequest* mutable_request();
-  inline ::yosysZKP::RevealRequest* release_request();
-  inline void set_allocated_request(::yosysZKP::RevealRequest* request);
+  static const int kCommitmentFieldNumber = 2;
+  inline const ::yosysZKP::Commitment& commitment() const;
+  inline ::yosysZKP::Commitment* mutable_commitment();
+  inline ::yosysZKP::Commitment* release_commitment();
+  inline void set_allocated_commitment(::yosysZKP::Commitment* commitment);
 
   // @@protoc_insertion_point(class_scope:yosysZKP.ProveeState)
  private:
-  inline void set_has_security_param();
-  inline void clear_has_security_param();
-  inline void set_has_confidence();
-  inline void clear_has_confidence();
+  inline void set_has_scrambling();
+  inline void clear_has_scrambling();
   inline void set_has_commitment();
   inline void clear_has_commitment();
-  inline void set_has_request();
-  inline void clear_has_request();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::google::protobuf::RepeatedField< bool > output_;
-  ::google::protobuf::int32 security_param_;
-  ::google::protobuf::int32 confidence_;
-  ::yosysZKP::Commitments* commitment_;
-  ::yosysZKP::RevealRequest* request_;
+  ::yosysZKP::Commitment* commitment_;
+  bool scrambling_;
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
@@ -1256,137 +958,33 @@ class ProveeState : public ::google::protobuf::Message {
 
 // ===================================================================
 
-// WireValues_Entry
-
-// required string wirename = 1;
-inline bool WireValues_Entry::has_wirename() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void WireValues_Entry::set_has_wirename() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void WireValues_Entry::clear_has_wirename() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void WireValues_Entry::clear_wirename() {
-  if (wirename_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    wirename_->clear();
-  }
-  clear_has_wirename();
-}
-inline const ::std::string& WireValues_Entry::wirename() const {
-  // @@protoc_insertion_point(field_get:yosysZKP.WireValues.Entry.wirename)
-  return *wirename_;
-}
-inline void WireValues_Entry::set_wirename(const ::std::string& value) {
-  set_has_wirename();
-  if (wirename_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    wirename_ = new ::std::string;
-  }
-  wirename_->assign(value);
-  // @@protoc_insertion_point(field_set:yosysZKP.WireValues.Entry.wirename)
-}
-inline void WireValues_Entry::set_wirename(const char* value) {
-  set_has_wirename();
-  if (wirename_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    wirename_ = new ::std::string;
-  }
-  wirename_->assign(value);
-  // @@protoc_insertion_point(field_set_char:yosysZKP.WireValues.Entry.wirename)
-}
-inline void WireValues_Entry::set_wirename(const char* value, size_t size) {
-  set_has_wirename();
-  if (wirename_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    wirename_ = new ::std::string;
-  }
-  wirename_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:yosysZKP.WireValues.Entry.wirename)
-}
-inline ::std::string* WireValues_Entry::mutable_wirename() {
-  set_has_wirename();
-  if (wirename_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    wirename_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:yosysZKP.WireValues.Entry.wirename)
-  return wirename_;
-}
-inline ::std::string* WireValues_Entry::release_wirename() {
-  clear_has_wirename();
-  if (wirename_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = wirename_;
-    wirename_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void WireValues_Entry::set_allocated_wirename(::std::string* wirename) {
-  if (wirename_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete wirename_;
-  }
-  if (wirename) {
-    set_has_wirename();
-    wirename_ = wirename;
-  } else {
-    clear_has_wirename();
-    wirename_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:yosysZKP.WireValues.Entry.wirename)
-}
-
-// required bool value = 2;
-inline bool WireValues_Entry::has_value() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void WireValues_Entry::set_has_value() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void WireValues_Entry::clear_has_value() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void WireValues_Entry::clear_value() {
-  value_ = false;
-  clear_has_value();
-}
-inline bool WireValues_Entry::value() const {
-  // @@protoc_insertion_point(field_get:yosysZKP.WireValues.Entry.value)
-  return value_;
-}
-inline void WireValues_Entry::set_value(bool value) {
-  set_has_value();
-  value_ = value;
-  // @@protoc_insertion_point(field_set:yosysZKP.WireValues.Entry.value)
-}
-
-// -------------------------------------------------------------------
-
 // WireValues
 
-// repeated .yosysZKP.WireValues.Entry entries = 1;
+// repeated bool entries = 1;
 inline int WireValues::entries_size() const {
   return entries_.size();
 }
 inline void WireValues::clear_entries() {
   entries_.Clear();
 }
-inline const ::yosysZKP::WireValues_Entry& WireValues::entries(int index) const {
+inline bool WireValues::entries(int index) const {
   // @@protoc_insertion_point(field_get:yosysZKP.WireValues.entries)
   return entries_.Get(index);
 }
-inline ::yosysZKP::WireValues_Entry* WireValues::mutable_entries(int index) {
-  // @@protoc_insertion_point(field_mutable:yosysZKP.WireValues.entries)
-  return entries_.Mutable(index);
+inline void WireValues::set_entries(int index, bool value) {
+  entries_.Set(index, value);
+  // @@protoc_insertion_point(field_set:yosysZKP.WireValues.entries)
 }
-inline ::yosysZKP::WireValues_Entry* WireValues::add_entries() {
+inline void WireValues::add_entries(bool value) {
+  entries_.Add(value);
   // @@protoc_insertion_point(field_add:yosysZKP.WireValues.entries)
-  return entries_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::yosysZKP::WireValues_Entry >&
+inline const ::google::protobuf::RepeatedField< bool >&
 WireValues::entries() const {
   // @@protoc_insertion_point(field_list:yosysZKP.WireValues.entries)
   return entries_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::yosysZKP::WireValues_Entry >*
+inline ::google::protobuf::RepeatedField< bool >*
 WireValues::mutable_entries() {
   // @@protoc_insertion_point(field_mutable_list:yosysZKP.WireValues.entries)
   return &entries_;
@@ -1690,40 +1288,6 @@ Commitment::mutable_gatehashes() {
 
 // -------------------------------------------------------------------
 
-// Commitments
-
-// repeated .yosysZKP.Commitment rounds = 2;
-inline int Commitments::rounds_size() const {
-  return rounds_.size();
-}
-inline void Commitments::clear_rounds() {
-  rounds_.Clear();
-}
-inline const ::yosysZKP::Commitment& Commitments::rounds(int index) const {
-  // @@protoc_insertion_point(field_get:yosysZKP.Commitments.rounds)
-  return rounds_.Get(index);
-}
-inline ::yosysZKP::Commitment* Commitments::mutable_rounds(int index) {
-  // @@protoc_insertion_point(field_mutable:yosysZKP.Commitments.rounds)
-  return rounds_.Mutable(index);
-}
-inline ::yosysZKP::Commitment* Commitments::add_rounds() {
-  // @@protoc_insertion_point(field_add:yosysZKP.Commitments.rounds)
-  return rounds_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::yosysZKP::Commitment >&
-Commitments::rounds() const {
-  // @@protoc_insertion_point(field_list:yosysZKP.Commitments.rounds)
-  return rounds_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::yosysZKP::Commitment >*
-Commitments::mutable_rounds() {
-  // @@protoc_insertion_point(field_mutable_list:yosysZKP.Commitments.rounds)
-  return &rounds_;
-}
-
-// -------------------------------------------------------------------
-
 // ExecutionReveal
 
 // required .yosysZKP.WireValues exec = 1;
@@ -1960,40 +1524,6 @@ inline void ProverSecret::set_allocated_scrambling(::yosysZKP::ScramblingReveal*
 
 // -------------------------------------------------------------------
 
-// ProverState
-
-// repeated .yosysZKP.ProverSecret round = 1;
-inline int ProverState::round_size() const {
-  return round_.size();
-}
-inline void ProverState::clear_round() {
-  round_.Clear();
-}
-inline const ::yosysZKP::ProverSecret& ProverState::round(int index) const {
-  // @@protoc_insertion_point(field_get:yosysZKP.ProverState.round)
-  return round_.Get(index);
-}
-inline ::yosysZKP::ProverSecret* ProverState::mutable_round(int index) {
-  // @@protoc_insertion_point(field_mutable:yosysZKP.ProverState.round)
-  return round_.Mutable(index);
-}
-inline ::yosysZKP::ProverSecret* ProverState::add_round() {
-  // @@protoc_insertion_point(field_add:yosysZKP.ProverState.round)
-  return round_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::yosysZKP::ProverSecret >&
-ProverState::round() const {
-  // @@protoc_insertion_point(field_list:yosysZKP.ProverState.round)
-  return round_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::yosysZKP::ProverSecret >*
-ProverState::mutable_round() {
-  // @@protoc_insertion_point(field_mutable_list:yosysZKP.ProverState.round)
-  return &round_;
-}
-
-// -------------------------------------------------------------------
-
 // RevealRequest
 
 // repeated bool scrambling = 1;
@@ -2030,115 +1560,61 @@ RevealRequest::mutable_scrambling() {
 
 // ProveeState
 
-// repeated bool output = 1;
-inline int ProveeState::output_size() const {
-  return output_.size();
+// required bool scrambling = 1;
+inline bool ProveeState::has_scrambling() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ProveeState::clear_output() {
-  output_.Clear();
+inline void ProveeState::set_has_scrambling() {
+  _has_bits_[0] |= 0x00000001u;
 }
-inline bool ProveeState::output(int index) const {
-  // @@protoc_insertion_point(field_get:yosysZKP.ProveeState.output)
-  return output_.Get(index);
+inline void ProveeState::clear_has_scrambling() {
+  _has_bits_[0] &= ~0x00000001u;
 }
-inline void ProveeState::set_output(int index, bool value) {
-  output_.Set(index, value);
-  // @@protoc_insertion_point(field_set:yosysZKP.ProveeState.output)
+inline void ProveeState::clear_scrambling() {
+  scrambling_ = false;
+  clear_has_scrambling();
 }
-inline void ProveeState::add_output(bool value) {
-  output_.Add(value);
-  // @@protoc_insertion_point(field_add:yosysZKP.ProveeState.output)
+inline bool ProveeState::scrambling() const {
+  // @@protoc_insertion_point(field_get:yosysZKP.ProveeState.scrambling)
+  return scrambling_;
 }
-inline const ::google::protobuf::RepeatedField< bool >&
-ProveeState::output() const {
-  // @@protoc_insertion_point(field_list:yosysZKP.ProveeState.output)
-  return output_;
-}
-inline ::google::protobuf::RepeatedField< bool >*
-ProveeState::mutable_output() {
-  // @@protoc_insertion_point(field_mutable_list:yosysZKP.ProveeState.output)
-  return &output_;
+inline void ProveeState::set_scrambling(bool value) {
+  set_has_scrambling();
+  scrambling_ = value;
+  // @@protoc_insertion_point(field_set:yosysZKP.ProveeState.scrambling)
 }
 
-// required int32 security_param = 2;
-inline bool ProveeState::has_security_param() const {
+// required .yosysZKP.Commitment commitment = 2;
+inline bool ProveeState::has_commitment() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ProveeState::set_has_security_param() {
+inline void ProveeState::set_has_commitment() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ProveeState::clear_has_security_param() {
+inline void ProveeState::clear_has_commitment() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ProveeState::clear_security_param() {
-  security_param_ = 0;
-  clear_has_security_param();
-}
-inline ::google::protobuf::int32 ProveeState::security_param() const {
-  // @@protoc_insertion_point(field_get:yosysZKP.ProveeState.security_param)
-  return security_param_;
-}
-inline void ProveeState::set_security_param(::google::protobuf::int32 value) {
-  set_has_security_param();
-  security_param_ = value;
-  // @@protoc_insertion_point(field_set:yosysZKP.ProveeState.security_param)
-}
-
-// required int32 confidence = 3;
-inline bool ProveeState::has_confidence() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void ProveeState::set_has_confidence() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void ProveeState::clear_has_confidence() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void ProveeState::clear_confidence() {
-  confidence_ = 0;
-  clear_has_confidence();
-}
-inline ::google::protobuf::int32 ProveeState::confidence() const {
-  // @@protoc_insertion_point(field_get:yosysZKP.ProveeState.confidence)
-  return confidence_;
-}
-inline void ProveeState::set_confidence(::google::protobuf::int32 value) {
-  set_has_confidence();
-  confidence_ = value;
-  // @@protoc_insertion_point(field_set:yosysZKP.ProveeState.confidence)
-}
-
-// required .yosysZKP.Commitments commitment = 4;
-inline bool ProveeState::has_commitment() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void ProveeState::set_has_commitment() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void ProveeState::clear_has_commitment() {
-  _has_bits_[0] &= ~0x00000008u;
-}
 inline void ProveeState::clear_commitment() {
-  if (commitment_ != NULL) commitment_->::yosysZKP::Commitments::Clear();
+  if (commitment_ != NULL) commitment_->::yosysZKP::Commitment::Clear();
   clear_has_commitment();
 }
-inline const ::yosysZKP::Commitments& ProveeState::commitment() const {
+inline const ::yosysZKP::Commitment& ProveeState::commitment() const {
   // @@protoc_insertion_point(field_get:yosysZKP.ProveeState.commitment)
   return commitment_ != NULL ? *commitment_ : *default_instance_->commitment_;
 }
-inline ::yosysZKP::Commitments* ProveeState::mutable_commitment() {
+inline ::yosysZKP::Commitment* ProveeState::mutable_commitment() {
   set_has_commitment();
-  if (commitment_ == NULL) commitment_ = new ::yosysZKP::Commitments;
+  if (commitment_ == NULL) commitment_ = new ::yosysZKP::Commitment;
   // @@protoc_insertion_point(field_mutable:yosysZKP.ProveeState.commitment)
   return commitment_;
 }
-inline ::yosysZKP::Commitments* ProveeState::release_commitment() {
+inline ::yosysZKP::Commitment* ProveeState::release_commitment() {
   clear_has_commitment();
-  ::yosysZKP::Commitments* temp = commitment_;
+  ::yosysZKP::Commitment* temp = commitment_;
   commitment_ = NULL;
   return temp;
 }
-inline void ProveeState::set_allocated_commitment(::yosysZKP::Commitments* commitment) {
+inline void ProveeState::set_allocated_commitment(::yosysZKP::Commitment* commitment) {
   delete commitment_;
   commitment_ = commitment;
   if (commitment) {
@@ -2147,47 +1623,6 @@ inline void ProveeState::set_allocated_commitment(::yosysZKP::Commitments* commi
     clear_has_commitment();
   }
   // @@protoc_insertion_point(field_set_allocated:yosysZKP.ProveeState.commitment)
-}
-
-// required .yosysZKP.RevealRequest request = 5;
-inline bool ProveeState::has_request() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void ProveeState::set_has_request() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void ProveeState::clear_has_request() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void ProveeState::clear_request() {
-  if (request_ != NULL) request_->::yosysZKP::RevealRequest::Clear();
-  clear_has_request();
-}
-inline const ::yosysZKP::RevealRequest& ProveeState::request() const {
-  // @@protoc_insertion_point(field_get:yosysZKP.ProveeState.request)
-  return request_ != NULL ? *request_ : *default_instance_->request_;
-}
-inline ::yosysZKP::RevealRequest* ProveeState::mutable_request() {
-  set_has_request();
-  if (request_ == NULL) request_ = new ::yosysZKP::RevealRequest;
-  // @@protoc_insertion_point(field_mutable:yosysZKP.ProveeState.request)
-  return request_;
-}
-inline ::yosysZKP::RevealRequest* ProveeState::release_request() {
-  clear_has_request();
-  ::yosysZKP::RevealRequest* temp = request_;
-  request_ = NULL;
-  return temp;
-}
-inline void ProveeState::set_allocated_request(::yosysZKP::RevealRequest* request) {
-  delete request_;
-  request_ = request;
-  if (request) {
-    set_has_request();
-  } else {
-    clear_has_request();
-  }
-  // @@protoc_insertion_point(field_set_allocated:yosysZKP.ProveeState.request)
 }
 
 

@@ -8,7 +8,7 @@
 struct WireValues {
   Yosys::Module* m;
   
-  Yosys::dict<Yosys::Wire*, unsigned char> map;
+  Yosys::dict<Yosys::IdString, unsigned char> map;
 
   WireValues(Yosys::Module* module);
   

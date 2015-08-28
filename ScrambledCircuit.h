@@ -16,8 +16,6 @@ struct ScrambledCircuit {
   
   Yosys::Module* m;
 
-  Yosys::SigMap sigmap;
-  
   /* Indexed by cell name */
   Yosys::dict<Yosys::IdString, yosysZKP::TruthTable> gatesdef;
   Yosys::dict<Yosys::IdString, yosysZKP::TruthTable> gates;

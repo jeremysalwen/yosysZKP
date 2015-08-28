@@ -23,9 +23,6 @@ namespace {
 const ::google::protobuf::Descriptor* WireValues_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   WireValues_reflection_ = NULL;
-const ::google::protobuf::Descriptor* WireValues_Entry_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  WireValues_Entry_reflection_ = NULL;
 const ::google::protobuf::Descriptor* TruthTableEntry_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   TruthTableEntry_reflection_ = NULL;
@@ -38,9 +35,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Commitment_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Commitment_reflection_ = NULL;
-const ::google::protobuf::Descriptor* Commitments_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  Commitments_reflection_ = NULL;
 const ::google::protobuf::Descriptor* ExecutionReveal_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ExecutionReveal_reflection_ = NULL;
@@ -50,9 +44,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* ProverSecret_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ProverSecret_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ProverState_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  ProverState_reflection_ = NULL;
 const ::google::protobuf::Descriptor* RevealRequest_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   RevealRequest_reflection_ = NULL;
@@ -84,22 +75,6 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(WireValues));
-  WireValues_Entry_descriptor_ = WireValues_descriptor_->nested_type(0);
-  static const int WireValues_Entry_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WireValues_Entry, wirename_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WireValues_Entry, value_),
-  };
-  WireValues_Entry_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      WireValues_Entry_descriptor_,
-      WireValues_Entry::default_instance_,
-      WireValues_Entry_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WireValues_Entry, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WireValues_Entry, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(WireValues_Entry));
   TruthTableEntry_descriptor_ = file->message_type(1);
   static const int TruthTableEntry_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TruthTableEntry, inputs_),
@@ -163,22 +138,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Commitment));
-  Commitments_descriptor_ = file->message_type(5);
-  static const int Commitments_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Commitments, rounds_),
-  };
-  Commitments_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      Commitments_descriptor_,
-      Commitments::default_instance_,
-      Commitments_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Commitments, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Commitments, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Commitments));
-  ExecutionReveal_descriptor_ = file->message_type(6);
+  ExecutionReveal_descriptor_ = file->message_type(5);
   static const int ExecutionReveal_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExecutionReveal, exec_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExecutionReveal, entries_),
@@ -194,7 +154,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ExecutionReveal));
-  ScramblingReveal_descriptor_ = file->message_type(7);
+  ScramblingReveal_descriptor_ = file->message_type(6);
   static const int ScramblingReveal_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScramblingReveal, keys_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScramblingReveal, gates_),
@@ -210,7 +170,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ScramblingReveal));
-  ProverSecret_descriptor_ = file->message_type(8);
+  ProverSecret_descriptor_ = file->message_type(7);
   static const int ProverSecret_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProverSecret, execution_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProverSecret, scrambling_),
@@ -226,22 +186,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProverSecret));
-  ProverState_descriptor_ = file->message_type(9);
-  static const int ProverState_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProverState, round_),
-  };
-  ProverState_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      ProverState_descriptor_,
-      ProverState::default_instance_,
-      ProverState_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProverState, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProverState, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(ProverState));
-  RevealRequest_descriptor_ = file->message_type(10);
+  RevealRequest_descriptor_ = file->message_type(8);
   static const int RevealRequest_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RevealRequest, scrambling_),
   };
@@ -256,13 +201,10 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(RevealRequest));
-  ProveeState_descriptor_ = file->message_type(11);
-  static const int ProveeState_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProveeState, output_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProveeState, security_param_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProveeState, confidence_),
+  ProveeState_descriptor_ = file->message_type(9);
+  static const int ProveeState_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProveeState, scrambling_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProveeState, commitment_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProveeState, request_),
   };
   ProveeState_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -290,8 +232,6 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     WireValues_descriptor_, &WireValues::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    WireValues_Entry_descriptor_, &WireValues_Entry::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TruthTableEntry_descriptor_, &TruthTableEntry::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TruthTable_descriptor_, &TruthTable::default_instance());
@@ -300,15 +240,11 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Commitment_descriptor_, &Commitment::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Commitments_descriptor_, &Commitments::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ExecutionReveal_descriptor_, &ExecutionReveal::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ScramblingReveal_descriptor_, &ScramblingReveal::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ProverSecret_descriptor_, &ProverSecret::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    ProverState_descriptor_, &ProverState::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     RevealRequest_descriptor_, &RevealRequest::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -320,8 +256,6 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void protobuf_ShutdownFile_messages_2eproto() {
   delete WireValues::default_instance_;
   delete WireValues_reflection_;
-  delete WireValues_Entry::default_instance_;
-  delete WireValues_Entry_reflection_;
   delete TruthTableEntry::default_instance_;
   delete TruthTableEntry_reflection_;
   delete TruthTable::default_instance_;
@@ -330,16 +264,12 @@ void protobuf_ShutdownFile_messages_2eproto() {
   delete TableCommitment_reflection_;
   delete Commitment::default_instance_;
   delete Commitment_reflection_;
-  delete Commitments::default_instance_;
-  delete Commitments_reflection_;
   delete ExecutionReveal::default_instance_;
   delete ExecutionReveal_reflection_;
   delete ScramblingReveal::default_instance_;
   delete ScramblingReveal_reflection_;
   delete ProverSecret::default_instance_;
   delete ProverSecret_reflection_;
-  delete ProverState::default_instance_;
-  delete ProverState_reflection_;
   delete RevealRequest::default_instance_;
   delete RevealRequest_reflection_;
   delete ProveeState::default_instance_;
@@ -353,57 +283,44 @@ void protobuf_AddDesc_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016messages.proto\022\010yosysZKP\"c\n\nWireValues"
-    "\022+\n\007entries\030\001 \003(\0132\032.yosysZKP.WireValues."
-    "Entry\032(\n\005Entry\022\020\n\010wirename\030\001 \002(\t\022\r\n\005valu"
-    "e\030\002 \002(\010\"A\n\017TruthTableEntry\022\016\n\006inputs\030\001 \003"
-    "(\010\022\017\n\007outputs\030\002 \003(\010\022\r\n\005nonce\030\003 \002(\014\"8\n\nTr"
-    "uthTable\022*\n\007entries\030\001 \003(\0132\031.yosysZKP.Tru"
-    "thTableEntry\"&\n\017TableCommitment\022\023\n\013entry"
-    "hashes\030\001 \003(\014\"K\n\nCommitment\022\016\n\006output\030\001 \003"
-    "(\010\022-\n\ngatehashes\030\002 \003(\0132\031.yosysZKP.TableC"
-    "ommitment\"3\n\013Commitments\022$\n\006rounds\030\002 \003(\013"
-    "2\024.yosysZKP.Commitment\"a\n\017ExecutionRevea"
-    "l\022\"\n\004exec\030\001 \002(\0132\024.yosysZKP.WireValues\022*\n"
-    "\007entries\030\002 \003(\0132\031.yosysZKP.TruthTableEntr"
-    "y\"[\n\020ScramblingReveal\022\"\n\004keys\030\001 \002(\0132\024.yo"
-    "sysZKP.WireValues\022#\n\005gates\030\002 \003(\0132\024.yosys"
-    "ZKP.TruthTable\"l\n\014ProverSecret\022,\n\texecut"
-    "ion\030\001 \001(\0132\031.yosysZKP.ExecutionReveal\022.\n\n"
-    "scrambling\030\002 \001(\0132\032.yosysZKP.ScramblingRe"
-    "veal\"4\n\013ProverState\022%\n\005round\030\001 \003(\0132\026.yos"
-    "ysZKP.ProverSecret\"#\n\rRevealRequest\022\022\n\ns"
-    "crambling\030\001 \003(\010\"\236\001\n\013ProveeState\022\016\n\006outpu"
-    "t\030\001 \003(\010\022\026\n\016security_param\030\002 \002(\005\022\022\n\nconfi"
-    "dence\030\003 \002(\005\022)\n\ncommitment\030\004 \002(\0132\025.yosysZ"
-    "KP.Commitments\022(\n\007request\030\005 \002(\0132\027.yosysZ"
-    "KP.RevealRequest", 976);
+    "\n\016messages.proto\022\010yosysZKP\"\035\n\nWireValues"
+    "\022\017\n\007entries\030\001 \003(\010\"A\n\017TruthTableEntry\022\016\n\006"
+    "inputs\030\001 \003(\010\022\017\n\007outputs\030\002 \003(\010\022\r\n\005nonce\030\003"
+    " \002(\014\"8\n\nTruthTable\022*\n\007entries\030\001 \003(\0132\031.yo"
+    "sysZKP.TruthTableEntry\"&\n\017TableCommitmen"
+    "t\022\023\n\013entryhashes\030\001 \003(\014\"K\n\nCommitment\022\016\n\006"
+    "output\030\001 \003(\010\022-\n\ngatehashes\030\002 \003(\0132\031.yosys"
+    "ZKP.TableCommitment\"a\n\017ExecutionReveal\022\""
+    "\n\004exec\030\001 \002(\0132\024.yosysZKP.WireValues\022*\n\007en"
+    "tries\030\002 \003(\0132\031.yosysZKP.TruthTableEntry\"["
+    "\n\020ScramblingReveal\022\"\n\004keys\030\001 \002(\0132\024.yosys"
+    "ZKP.WireValues\022#\n\005gates\030\002 \003(\0132\024.yosysZKP"
+    ".TruthTable\"l\n\014ProverSecret\022,\n\texecution"
+    "\030\001 \001(\0132\031.yosysZKP.ExecutionReveal\022.\n\nscr"
+    "ambling\030\002 \001(\0132\032.yosysZKP.ScramblingRevea"
+    "l\"#\n\rRevealRequest\022\022\n\nscrambling\030\001 \003(\010\"K"
+    "\n\013ProveeState\022\022\n\nscrambling\030\001 \002(\010\022(\n\ncom"
+    "mitment\030\002 \002(\0132\024.yosysZKP.Commitment", 715);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   WireValues::default_instance_ = new WireValues();
-  WireValues_Entry::default_instance_ = new WireValues_Entry();
   TruthTableEntry::default_instance_ = new TruthTableEntry();
   TruthTable::default_instance_ = new TruthTable();
   TableCommitment::default_instance_ = new TableCommitment();
   Commitment::default_instance_ = new Commitment();
-  Commitments::default_instance_ = new Commitments();
   ExecutionReveal::default_instance_ = new ExecutionReveal();
   ScramblingReveal::default_instance_ = new ScramblingReveal();
   ProverSecret::default_instance_ = new ProverSecret();
-  ProverState::default_instance_ = new ProverState();
   RevealRequest::default_instance_ = new RevealRequest();
   ProveeState::default_instance_ = new ProveeState();
   WireValues::default_instance_->InitAsDefaultInstance();
-  WireValues_Entry::default_instance_->InitAsDefaultInstance();
   TruthTableEntry::default_instance_->InitAsDefaultInstance();
   TruthTable::default_instance_->InitAsDefaultInstance();
   TableCommitment::default_instance_->InitAsDefaultInstance();
   Commitment::default_instance_->InitAsDefaultInstance();
-  Commitments::default_instance_->InitAsDefaultInstance();
   ExecutionReveal::default_instance_->InitAsDefaultInstance();
   ScramblingReveal::default_instance_->InitAsDefaultInstance();
   ProverSecret::default_instance_->InitAsDefaultInstance();
-  ProverState::default_instance_->InitAsDefaultInstance();
   RevealRequest::default_instance_->InitAsDefaultInstance();
   ProveeState::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_messages_2eproto);
@@ -417,289 +334,6 @@ struct StaticDescriptorInitializer_messages_2eproto {
 } static_descriptor_initializer_messages_2eproto_;
 
 // ===================================================================
-
-#ifndef _MSC_VER
-const int WireValues_Entry::kWirenameFieldNumber;
-const int WireValues_Entry::kValueFieldNumber;
-#endif  // !_MSC_VER
-
-WireValues_Entry::WireValues_Entry()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:yosysZKP.WireValues.Entry)
-}
-
-void WireValues_Entry::InitAsDefaultInstance() {
-}
-
-WireValues_Entry::WireValues_Entry(const WireValues_Entry& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:yosysZKP.WireValues.Entry)
-}
-
-void WireValues_Entry::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
-  _cached_size_ = 0;
-  wirename_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  value_ = false;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-WireValues_Entry::~WireValues_Entry() {
-  // @@protoc_insertion_point(destructor:yosysZKP.WireValues.Entry)
-  SharedDtor();
-}
-
-void WireValues_Entry::SharedDtor() {
-  if (wirename_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete wirename_;
-  }
-  if (this != default_instance_) {
-  }
-}
-
-void WireValues_Entry::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* WireValues_Entry::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return WireValues_Entry_descriptor_;
-}
-
-const WireValues_Entry& WireValues_Entry::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
-  return *default_instance_;
-}
-
-WireValues_Entry* WireValues_Entry::default_instance_ = NULL;
-
-WireValues_Entry* WireValues_Entry::New() const {
-  return new WireValues_Entry;
-}
-
-void WireValues_Entry::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_wirename()) {
-      if (wirename_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        wirename_->clear();
-      }
-    }
-    value_ = false;
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool WireValues_Entry::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:yosysZKP.WireValues.Entry)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string wirename = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_wirename()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->wirename().data(), this->wirename().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "wirename");
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_value;
-        break;
-      }
-
-      // required bool value = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_value:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &value_)));
-          set_has_value();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:yosysZKP.WireValues.Entry)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:yosysZKP.WireValues.Entry)
-  return false;
-#undef DO_
-}
-
-void WireValues_Entry::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:yosysZKP.WireValues.Entry)
-  // required string wirename = 1;
-  if (has_wirename()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->wirename().data(), this->wirename().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "wirename");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->wirename(), output);
-  }
-
-  // required bool value = 2;
-  if (has_value()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->value(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:yosysZKP.WireValues.Entry)
-}
-
-::google::protobuf::uint8* WireValues_Entry::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:yosysZKP.WireValues.Entry)
-  // required string wirename = 1;
-  if (has_wirename()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->wirename().data(), this->wirename().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "wirename");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->wirename(), target);
-  }
-
-  // required bool value = 2;
-  if (has_value()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->value(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:yosysZKP.WireValues.Entry)
-  return target;
-}
-
-int WireValues_Entry::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string wirename = 1;
-    if (has_wirename()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->wirename());
-    }
-
-    // required bool value = 2;
-    if (has_value()) {
-      total_size += 1 + 1;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void WireValues_Entry::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const WireValues_Entry* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const WireValues_Entry*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void WireValues_Entry::MergeFrom(const WireValues_Entry& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_wirename()) {
-      set_wirename(from.wirename());
-    }
-    if (from.has_value()) {
-      set_value(from.value());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void WireValues_Entry::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void WireValues_Entry::CopyFrom(const WireValues_Entry& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool WireValues_Entry::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
-
-  return true;
-}
-
-void WireValues_Entry::Swap(WireValues_Entry* other) {
-  if (other != this) {
-    std::swap(wirename_, other->wirename_);
-    std::swap(value_, other->value_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata WireValues_Entry::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = WireValues_Entry_descriptor_;
-  metadata.reflection = WireValues_Entry_reflection_;
-  return metadata;
-}
-
-
-// -------------------------------------------------------------------
 
 #ifndef _MSC_VER
 const int WireValues::kEntriesFieldNumber;
@@ -773,16 +407,21 @@ bool WireValues::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .yosysZKP.WireValues.Entry entries = 1;
+      // repeated bool entries = 1;
       case 1: {
-        if (tag == 10) {
+        if (tag == 8) {
          parse_entries:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_entries()));
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 1, 8, input, this->mutable_entries())));
+        } else if (tag == 10) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, this->mutable_entries())));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_entries;
+        if (input->ExpectTag(8)) goto parse_entries;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -812,9 +451,9 @@ failure:
 void WireValues::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:yosysZKP.WireValues)
-  // repeated .yosysZKP.WireValues.Entry entries = 1;
+  // repeated bool entries = 1;
   for (int i = 0; i < this->entries_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google::protobuf::internal::WireFormatLite::WriteBool(
       1, this->entries(i), output);
   }
 
@@ -828,11 +467,10 @@ void WireValues::SerializeWithCachedSizes(
 ::google::protobuf::uint8* WireValues::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:yosysZKP.WireValues)
-  // repeated .yosysZKP.WireValues.Entry entries = 1;
+  // repeated bool entries = 1;
   for (int i = 0; i < this->entries_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->entries(i), target);
+      WriteBoolToArray(1, this->entries(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -846,12 +484,11 @@ void WireValues::SerializeWithCachedSizes(
 int WireValues::ByteSize() const {
   int total_size = 0;
 
-  // repeated .yosysZKP.WireValues.Entry entries = 1;
-  total_size += 1 * this->entries_size();
-  for (int i = 0; i < this->entries_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->entries(i));
+  // repeated bool entries = 1;
+  {
+    int data_size = 0;
+    data_size = 1 * this->entries_size();
+    total_size += 1 * this->entries_size() + data_size;
   }
 
   if (!unknown_fields().empty()) {
@@ -897,7 +534,6 @@ void WireValues::CopyFrom(const WireValues& from) {
 
 bool WireValues::IsInitialized() const {
 
-  if (!::google::protobuf::internal::AllAreInitialized(this->entries())) return false;
   return true;
 }
 
@@ -1938,225 +1574,6 @@ void Commitment::Swap(Commitment* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Commitments::kRoundsFieldNumber;
-#endif  // !_MSC_VER
-
-Commitments::Commitments()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:yosysZKP.Commitments)
-}
-
-void Commitments::InitAsDefaultInstance() {
-}
-
-Commitments::Commitments(const Commitments& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:yosysZKP.Commitments)
-}
-
-void Commitments::SharedCtor() {
-  _cached_size_ = 0;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-Commitments::~Commitments() {
-  // @@protoc_insertion_point(destructor:yosysZKP.Commitments)
-  SharedDtor();
-}
-
-void Commitments::SharedDtor() {
-  if (this != default_instance_) {
-  }
-}
-
-void Commitments::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* Commitments::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return Commitments_descriptor_;
-}
-
-const Commitments& Commitments::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
-  return *default_instance_;
-}
-
-Commitments* Commitments::default_instance_ = NULL;
-
-Commitments* Commitments::New() const {
-  return new Commitments;
-}
-
-void Commitments::Clear() {
-  rounds_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool Commitments::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:yosysZKP.Commitments)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .yosysZKP.Commitment rounds = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_rounds:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_rounds()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_rounds;
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:yosysZKP.Commitments)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:yosysZKP.Commitments)
-  return false;
-#undef DO_
-}
-
-void Commitments::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:yosysZKP.Commitments)
-  // repeated .yosysZKP.Commitment rounds = 2;
-  for (int i = 0; i < this->rounds_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->rounds(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:yosysZKP.Commitments)
-}
-
-::google::protobuf::uint8* Commitments::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:yosysZKP.Commitments)
-  // repeated .yosysZKP.Commitment rounds = 2;
-  for (int i = 0; i < this->rounds_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->rounds(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:yosysZKP.Commitments)
-  return target;
-}
-
-int Commitments::ByteSize() const {
-  int total_size = 0;
-
-  // repeated .yosysZKP.Commitment rounds = 2;
-  total_size += 1 * this->rounds_size();
-  for (int i = 0; i < this->rounds_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->rounds(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void Commitments::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const Commitments* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Commitments*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void Commitments::MergeFrom(const Commitments& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  rounds_.MergeFrom(from.rounds_);
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void Commitments::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void Commitments::CopyFrom(const Commitments& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool Commitments::IsInitialized() const {
-
-  return true;
-}
-
-void Commitments::Swap(Commitments* other) {
-  if (other != this) {
-    rounds_.Swap(&other->rounds_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata Commitments::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Commitments_descriptor_;
-  metadata.reflection = Commitments_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
 const int ExecutionReveal::kExecFieldNumber;
 const int ExecutionReveal::kEntriesFieldNumber;
 #endif  // !_MSC_VER
@@ -2399,9 +1816,6 @@ void ExecutionReveal::CopyFrom(const ExecutionReveal& from) {
 bool ExecutionReveal::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
-  if (has_exec()) {
-    if (!this->exec().IsInitialized()) return false;
-  }
   if (!::google::protobuf::internal::AllAreInitialized(this->entries())) return false;
   return true;
 }
@@ -2670,9 +2084,6 @@ void ScramblingReveal::CopyFrom(const ScramblingReveal& from) {
 bool ScramblingReveal::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
-  if (has_keys()) {
-    if (!this->keys().IsInitialized()) return false;
-  }
   if (!::google::protobuf::internal::AllAreInitialized(this->gates())) return false;
   return true;
 }
@@ -2978,226 +2389,6 @@ void ProverSecret::Swap(ProverSecret* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int ProverState::kRoundFieldNumber;
-#endif  // !_MSC_VER
-
-ProverState::ProverState()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:yosysZKP.ProverState)
-}
-
-void ProverState::InitAsDefaultInstance() {
-}
-
-ProverState::ProverState(const ProverState& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:yosysZKP.ProverState)
-}
-
-void ProverState::SharedCtor() {
-  _cached_size_ = 0;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-ProverState::~ProverState() {
-  // @@protoc_insertion_point(destructor:yosysZKP.ProverState)
-  SharedDtor();
-}
-
-void ProverState::SharedDtor() {
-  if (this != default_instance_) {
-  }
-}
-
-void ProverState::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* ProverState::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return ProverState_descriptor_;
-}
-
-const ProverState& ProverState::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
-  return *default_instance_;
-}
-
-ProverState* ProverState::default_instance_ = NULL;
-
-ProverState* ProverState::New() const {
-  return new ProverState;
-}
-
-void ProverState::Clear() {
-  round_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool ProverState::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:yosysZKP.ProverState)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .yosysZKP.ProverSecret round = 1;
-      case 1: {
-        if (tag == 10) {
-         parse_round:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_round()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_round;
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:yosysZKP.ProverState)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:yosysZKP.ProverState)
-  return false;
-#undef DO_
-}
-
-void ProverState::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:yosysZKP.ProverState)
-  // repeated .yosysZKP.ProverSecret round = 1;
-  for (int i = 0; i < this->round_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->round(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:yosysZKP.ProverState)
-}
-
-::google::protobuf::uint8* ProverState::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:yosysZKP.ProverState)
-  // repeated .yosysZKP.ProverSecret round = 1;
-  for (int i = 0; i < this->round_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->round(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:yosysZKP.ProverState)
-  return target;
-}
-
-int ProverState::ByteSize() const {
-  int total_size = 0;
-
-  // repeated .yosysZKP.ProverSecret round = 1;
-  total_size += 1 * this->round_size();
-  for (int i = 0; i < this->round_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->round(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void ProverState::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const ProverState* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ProverState*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void ProverState::MergeFrom(const ProverState& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  round_.MergeFrom(from.round_);
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void ProverState::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void ProverState::CopyFrom(const ProverState& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool ProverState::IsInitialized() const {
-
-  if (!::google::protobuf::internal::AllAreInitialized(this->round())) return false;
-  return true;
-}
-
-void ProverState::Swap(ProverState* other) {
-  if (other != this) {
-    round_.Swap(&other->round_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata ProverState::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = ProverState_descriptor_;
-  metadata.reflection = ProverState_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
 const int RevealRequest::kScramblingFieldNumber;
 #endif  // !_MSC_VER
 
@@ -3420,11 +2611,8 @@ void RevealRequest::Swap(RevealRequest* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int ProveeState::kOutputFieldNumber;
-const int ProveeState::kSecurityParamFieldNumber;
-const int ProveeState::kConfidenceFieldNumber;
+const int ProveeState::kScramblingFieldNumber;
 const int ProveeState::kCommitmentFieldNumber;
-const int ProveeState::kRequestFieldNumber;
 #endif  // !_MSC_VER
 
 ProveeState::ProveeState()
@@ -3434,8 +2622,7 @@ ProveeState::ProveeState()
 }
 
 void ProveeState::InitAsDefaultInstance() {
-  commitment_ = const_cast< ::yosysZKP::Commitments*>(&::yosysZKP::Commitments::default_instance());
-  request_ = const_cast< ::yosysZKP::RevealRequest*>(&::yosysZKP::RevealRequest::default_instance());
+  commitment_ = const_cast< ::yosysZKP::Commitment*>(&::yosysZKP::Commitment::default_instance());
 }
 
 ProveeState::ProveeState(const ProveeState& from)
@@ -3447,10 +2634,8 @@ ProveeState::ProveeState(const ProveeState& from)
 
 void ProveeState::SharedCtor() {
   _cached_size_ = 0;
-  security_param_ = 0;
-  confidence_ = 0;
+  scrambling_ = false;
   commitment_ = NULL;
-  request_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3462,7 +2647,6 @@ ProveeState::~ProveeState() {
 void ProveeState::SharedDtor() {
   if (this != default_instance_) {
     delete commitment_;
-    delete request_;
   }
 }
 
@@ -3488,30 +2672,12 @@ ProveeState* ProveeState::New() const {
 }
 
 void ProveeState::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<ProveeState*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 30) {
-    ZR_(security_param_, confidence_);
+  if (_has_bits_[0 / 32] & 3) {
+    scrambling_ = false;
     if (has_commitment()) {
-      if (commitment_ != NULL) commitment_->::yosysZKP::Commitments::Clear();
-    }
-    if (has_request()) {
-      if (request_ != NULL) request_->::yosysZKP::RevealRequest::Clear();
+      if (commitment_ != NULL) commitment_->::yosysZKP::Commitment::Clear();
     }
   }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  output_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3526,74 +2692,26 @@ bool ProveeState::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated bool output = 1;
+      // required bool scrambling = 1;
       case 1: {
         if (tag == 8) {
-         parse_output:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 1, 8, input, this->mutable_output())));
-        } else if (tag == 10) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, this->mutable_output())));
+                 input, &scrambling_)));
+          set_has_scrambling();
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(8)) goto parse_output;
-        if (input->ExpectTag(16)) goto parse_security_param;
+        if (input->ExpectTag(18)) goto parse_commitment;
         break;
       }
 
-      // required int32 security_param = 2;
+      // required .yosysZKP.Commitment commitment = 2;
       case 2: {
-        if (tag == 16) {
-         parse_security_param:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &security_param_)));
-          set_has_security_param();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_confidence;
-        break;
-      }
-
-      // required int32 confidence = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_confidence:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &confidence_)));
-          set_has_confidence();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_commitment;
-        break;
-      }
-
-      // required .yosysZKP.Commitments commitment = 4;
-      case 4: {
-        if (tag == 34) {
+        if (tag == 18) {
          parse_commitment:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_commitment()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(42)) goto parse_request;
-        break;
-      }
-
-      // required .yosysZKP.RevealRequest request = 5;
-      case 5: {
-        if (tag == 42) {
-         parse_request:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_request()));
         } else {
           goto handle_unusual;
         }
@@ -3626,32 +2744,15 @@ failure:
 void ProveeState::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:yosysZKP.ProveeState)
-  // repeated bool output = 1;
-  for (int i = 0; i < this->output_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(
-      1, this->output(i), output);
+  // required bool scrambling = 1;
+  if (has_scrambling()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->scrambling(), output);
   }
 
-  // required int32 security_param = 2;
-  if (has_security_param()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->security_param(), output);
-  }
-
-  // required int32 confidence = 3;
-  if (has_confidence()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->confidence(), output);
-  }
-
-  // required .yosysZKP.Commitments commitment = 4;
+  // required .yosysZKP.Commitment commitment = 2;
   if (has_commitment()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->commitment(), output);
-  }
-
-  // required .yosysZKP.RevealRequest request = 5;
-  if (has_request()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->request(), output);
+      2, this->commitment(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3664,34 +2765,16 @@ void ProveeState::SerializeWithCachedSizes(
 ::google::protobuf::uint8* ProveeState::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:yosysZKP.ProveeState)
-  // repeated bool output = 1;
-  for (int i = 0; i < this->output_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteBoolToArray(1, this->output(i), target);
+  // required bool scrambling = 1;
+  if (has_scrambling()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->scrambling(), target);
   }
 
-  // required int32 security_param = 2;
-  if (has_security_param()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->security_param(), target);
-  }
-
-  // required int32 confidence = 3;
-  if (has_confidence()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->confidence(), target);
-  }
-
-  // required .yosysZKP.Commitments commitment = 4;
+  // required .yosysZKP.Commitment commitment = 2;
   if (has_commitment()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        4, this->commitment(), target);
-  }
-
-  // required .yosysZKP.RevealRequest request = 5;
-  if (has_request()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        5, this->request(), target);
+        2, this->commitment(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3705,43 +2788,20 @@ void ProveeState::SerializeWithCachedSizes(
 int ProveeState::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // required int32 security_param = 2;
-    if (has_security_param()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->security_param());
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required bool scrambling = 1;
+    if (has_scrambling()) {
+      total_size += 1 + 1;
     }
 
-    // required int32 confidence = 3;
-    if (has_confidence()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->confidence());
-    }
-
-    // required .yosysZKP.Commitments commitment = 4;
+    // required .yosysZKP.Commitment commitment = 2;
     if (has_commitment()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->commitment());
     }
 
-    // required .yosysZKP.RevealRequest request = 5;
-    if (has_request()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->request());
-    }
-
   }
-  // repeated bool output = 1;
-  {
-    int data_size = 0;
-    data_size = 1 * this->output_size();
-    total_size += 1 * this->output_size() + data_size;
-  }
-
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -3767,19 +2827,12 @@ void ProveeState::MergeFrom(const ::google::protobuf::Message& from) {
 
 void ProveeState::MergeFrom(const ProveeState& from) {
   GOOGLE_CHECK_NE(&from, this);
-  output_.MergeFrom(from.output_);
-  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    if (from.has_security_param()) {
-      set_security_param(from.security_param());
-    }
-    if (from.has_confidence()) {
-      set_confidence(from.confidence());
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_scrambling()) {
+      set_scrambling(from.scrambling());
     }
     if (from.has_commitment()) {
-      mutable_commitment()->::yosysZKP::Commitments::MergeFrom(from.commitment());
-    }
-    if (from.has_request()) {
-      mutable_request()->::yosysZKP::RevealRequest::MergeFrom(from.request());
+      mutable_commitment()->::yosysZKP::Commitment::MergeFrom(from.commitment());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3798,18 +2851,15 @@ void ProveeState::CopyFrom(const ProveeState& from) {
 }
 
 bool ProveeState::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000001e) != 0x0000001e) return false;
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
 void ProveeState::Swap(ProveeState* other) {
   if (other != this) {
-    output_.Swap(&other->output_);
-    std::swap(security_param_, other->security_param_);
-    std::swap(confidence_, other->confidence_);
+    std::swap(scrambling_, other->scrambling_);
     std::swap(commitment_, other->commitment_);
-    std::swap(request_, other->request_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

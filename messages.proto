@@ -1,11 +1,7 @@
 package yosysZKP;
 
 message WireValues {
-  message Entry {
-    required string wirename = 1;
-    required bool value = 2; 
-  }
-  repeated Entry entries = 1;
+  repeated bool entries = 1;
 }
 
 message TruthTableEntry {
@@ -27,9 +23,6 @@ message Commitment {
   repeated TableCommitment gatehashes = 2;
 }
 
-message Commitments {
-  repeated Commitment rounds =2;
-}
 message ExecutionReveal {
   required WireValues exec = 1;
   repeated TruthTableEntry entries = 2;
@@ -45,19 +38,11 @@ message ProverSecret {
   optional ScramblingReveal scrambling = 2;
 }
 
-message ProverState {
-  repeated ProverSecret round = 1;
-}
-
 message RevealRequest {
  repeated bool scrambling =1;
 }
 
 message ProveeState {
-  repeated bool output =1;
-  required int32 security_param =2;
-  required int32 confidence =3;
-
-  required Commitments commitment=4;
-  required RevealRequest request=5;
+  required bool scrambling =1;
+  required Commitment commitment =2;
 }
